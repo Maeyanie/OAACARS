@@ -14,7 +14,9 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    va.cpp
+    va.cpp \
+    events.cpp \
+    update.cpp
 
 HEADERS  += mainwindow.h \
     va.h

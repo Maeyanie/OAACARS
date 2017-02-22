@@ -5,6 +5,16 @@
 #include <QUdpSocket>
 #include "va.h"
 
+struct Status {
+    qint64 time;
+    float pitch, bank, heading, vs, ias, lat, lon;
+    float flaps, fuel;
+    bool engine[8];
+    bool gear;
+    bool bea, nav, ldn, str, txi;
+    float winddeg, windknots, oat;
+};
+
 namespace Ui {
 class MainWindow;
 }
@@ -27,10 +37,20 @@ private slots:
     void on_endButton_clicked();
 
     void on_callsign_textChanged(const QString &arg1);
-
     void on_password_textChanged(const QString &arg1);
 
 private:
+    void takeoff();
+    void climb();
+    void cruise();
+    void descend();
+    void landing();
+    void engineStart(int e);
+    void engineStop(int e);
+    void refuel();
+    void overspeed();
+    void stall();
+
     Ui::MainWindow *ui;
     QUdpSocket* sock;
     VA va;
@@ -42,17 +62,7 @@ private:
     float startLat, startLon;
     float startFuel, maxG;
 
-    struct States {
-        float heading, lat, lon;
-        float flaps;
-        bool engine[4];
-        bool gear;
-    } states;
-
-    struct Landing {
-        float vs, ias, g, bank, pitch, winddeg, windknots, oat, flaps;
-        bool bea, nav, ldn, str;
-    } landing;
+    Status cur, onTakeoff, onLanding;
 
     struct Mistakes {
         bool crash, beaconOff, iasLow, lightsLow, lightsHigh, overspeed, pause,

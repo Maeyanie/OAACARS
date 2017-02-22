@@ -3,7 +3,6 @@
 
 #include <QMessageBox>
 #include <QTimer>
-#include <cstdarg>
 
 /*
 Events:
@@ -83,11 +82,14 @@ MainWindow::MainWindow(QWidget *parent) :
     memcat(&pos, 4); // Mach, VVI, G-load
     memcat(&pos, 13);// trim/flap/slat/s-brakes
     memcat(&pos, 14);// gear/brakes
+    memcat(&pos, 17);// pitch, roll, headings
     memcat(&pos, 20);// lat, lon, altitude
     memcat(&pos, 21);// loc, vel, dist traveled
     //memcat(&pos, 62);// fuel weights
     memcat(&pos, 63);// payload weights and CG
     memcat(&pos, 106); // switches 1: electrical
+    memcat(&pos, 114); // annunciators: general #2
+    memcat(&pos, 127); // warning status
     sock->writeDatagram(buffer, (pos-buffer), addr, 49000);
 
     memset(buffer, 0, 1024);
@@ -111,68 +113,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::gotUpdate() {
-    qint32 len;
-    char buffer[2048]; // I think the max UDP datagram size is 924 or so, so this should be plenty.
-    char* ptr;
-    char msg[5] = "    ";
-    int type;
-    float val[8];
-
-    while (sock->hasPendingDatagrams()) {
-        len = sock->readDatagram(buffer, 2048);
-
-        //this->ui->textBrowser->append("Got packet len="+QString::number(len));
-        memcpy(msg, buffer, 4);
-
-        for (ptr = buffer+5; ptr < buffer+len; ptr += 36) {
-            memcpy(&type, ptr, 4);
-            memcpy(val, ptr+4, 8*sizeof(float));
-
-            switch (type) {
-                    //         0     1     2     3     4     5     6     7
-            case 1: // times:  real  totl  missn timer ----- zulu  local hobbs
-                break;
-            case 3: // speeds: kias  keas  ktas  ktgs  ----- mph   mphas mphgs
-                ui->ias->setText(QString::number(val[0], 'f', 1)+" kn");
-                ui->gs->setText(QString::number(val[3], 'f', 0)+" kn");
-                break;
-            case 4: //         mach  ----- fpm   Gnorm Gaxil Gside ----- -----
-                ui->vs->setText(QString::number(val[2], 'f', 1)+" fpm");
-                if (fabs(val[3]) + fabs(val[4]) + fabs(val[5]) > maxG) {
-                    maxG = fabs(val[3]) + fabs(val[4]) + fabs(val[5]);
-                    ui->flightEvents->append("New Max G: "+QString::number(maxG, 'f', 1));
-                }
-            case 13: //        telev talrn trudr fhndl fposn srtio sbhdl sbpos
-                ui->flaps->setText(QString::number(val[4]*100, 'f', 0)+"%");
-                break;
-            case 14: //        gear  wbrak lbrak rbrak
-                break;
-            case 20: //        latd  lond  altsl altgl runwy aind lats  lonw
-                ui->altitude->setText(QString::number(val[2], 'f', 0)+" ft");
-                ui->lat->setText(QString::number(val[0], 'f', 2)+" deg");
-                ui->lon->setText(QString::number(val[1], 'f', 2)+" deg");
-                states.lat = val[0];
-                states.lon = val[1];
-                break;
-            case 21: //        x     y     z     vX    vY    vZ   dstft dstnm
-                break;
-            case 63: // payload weights and CG
-                if (val[2] > startFuel) startFuel = val[2];
-                ui->fob->setText(QString::number(val[2], 'f', 0)+" lb");
-                ui->fu->setText(QString::number(startFuel-val[2], 'f', 0)+" lb");
-                ui->zfw->setText(QString::number(val[0]+val[1], 'f', 0)+" lb");
-                break;
-            case 106: // switches 1: electrical
-                break;
-            default:
-                //ui->textBrowser->append("Got "+QString(msg)+" with unexpected type="+QString::number(type)+" len="+QString::number(len)+", ignoring.");
-                break;
-            }
-        }
-    }
-}
-
 void MainWindow::sendUpdate() {
     /*[{"pilotId":"40","flightId":"2017222102431964OPA1115","departure":"EDDM","arrival":"EHAM","ias":"63","heading":"83",
      * "gs":"64","altitude":"1494","fuel":"6912","fuel_used":"26","latitude":"48.3630222722823","longitude":"11.7710648617527",
@@ -186,13 +126,13 @@ void MainWindow::sendUpdate() {
     msg["departure"] = ui->depIcao->text();
     msg["arrival"] = ui->arrIcao->text();
     msg["ias"] = ui->ias->text();
-    msg["heading"] = states.heading;
+    msg["heading"] = cur.heading;
     msg["gs"] = ui->gs->text();
     msg["altitude"] = ui->altitude->text();
     msg["fuel"] = ui->fob->text();
     msg["fuel_used"] = ui->fu->text();
-    msg["latitude"] = states.lat;
-    msg["longitude"] = states.lon;
+    msg["latitude"] = cur.lat;
+    msg["longitude"] = cur.lon;
     msg["time_passed"] = time(NULL) - startTime;
     msg["plane_type"] = ui->acIcao->text();
 
@@ -301,13 +241,14 @@ void MainWindow::on_startButton_clicked()
     // 2017-2-22 10:24:31.964 OPA1115
     flight = QDateTime::currentDateTime().toString("yyyyMdhhmmsszzz")+ui->flightNo->text();
     startTime = time(NULL);
-    startLat = states.lat;
-    startLon = states.lon;
+    startLat = cur.lat;
+    startLon = cur.lon;
 
     state = 1;
-    states.flaps = 0;
-    states.gear = 1;
-    states.engine[0] = states.engine[1] = states.engine[2] = states.engine[3] = 0;
+    cur.flaps = 0;
+    cur.gear = 1;
+    cur.engine[0] = cur.engine[1] = cur.engine[2] = cur.engine[3] = 0;
+    mistakes.reset();
 
     sendUpdate();
     timer.start(60000);
@@ -358,26 +299,26 @@ void MainWindow::on_endButton_clicked()
     msg["aircraft_type"] = ui->acIcao->text();
     msg["aircraft_registry"] = ui->tailNumber->text();
     msg["flight_status"] = "FLIGHT FINISHED";
-    msg["flight_duration"] = QString::number((time(NULL) - startTime) / 60.0, 'f', 2);
+    msg["flight_duration"] = QString::number((onLanding.time-onTakeoff.time) / 60.0, 'f', 2);
     msg["flight_fuel"] = ui->fu->text();
-    msg["block_fuel"] = ui->fu->text();
+    msg["block_fuel"] = QString::number(onTakeoff.fuel-onLanding.fuel, 'f', 0);
     msg["flight_date"] = QDateTime::currentDateTime().toString("yyyy-M-d hh:mm:ss");
 
     msg["distance"] = "0";
 
-    msg["landing_vs"] = QString::number(landing.vs);
-    msg["landing_ias"] = QString::number(landing.ias);
-    msg["landing_forceg"] = QString::number(landing.g);
-    msg["landing_bank"] = QString::number(landing.bank);
-    msg["landing_pitch"] = QString::number(landing.pitch);
-    msg["landing_winddeg"] = QString::number(landing.winddeg);
-    msg["landing_windknots"] = QString::number(landing.windknots);
-    msg["landing_oat"] = QString::number(landing.oat);
-    msg["landing_flaps"] = QString::number(landing.flaps);
-    msg["landing_light_bea"] = QString::number(landing.bea);
-    msg["landing_light_nav"] = QString::number(landing.nav);
-    msg["landing_light_ldn"] = QString::number(landing.ldn);
-    msg["landing_light_str"] = QString::number(landing.str);
+    msg["landing_vs"] = QString::number(onLanding.vs);
+    msg["landing_ias"] = QString::number(onLanding.ias);
+    msg["landing_forceg"] = QString::number(maxG);
+    msg["landing_bank"] = QString::number(onLanding.bank);
+    msg["landing_pitch"] = QString::number(onLanding.pitch);
+    msg["landing_winddeg"] = QString::number(onLanding.winddeg);
+    msg["landing_windknots"] = QString::number(onLanding.windknots);
+    msg["landing_oat"] = QString::number(onLanding.oat);
+    msg["landing_flaps"] = QString::number(onLanding.flaps);
+    msg["landing_light_bea"] = QString::number(onLanding.bea);
+    msg["landing_light_nav"] = QString::number(onLanding.nav);
+    msg["landing_light_ldn"] = QString::number(onLanding.ldn);
+    msg["landing_light_str"] = QString::number(onLanding.str);
 
     msg["log_start"] = QDateTime::fromTime_t(startTime).toString("yyyy-M-d hh:mm:ss");
     msg["flight_start"] = QDateTime::fromTime_t(startTime).toString("yyyy-M-d hh:mm:ss");
