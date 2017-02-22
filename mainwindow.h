@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QUdpSocket>
+#include "va.h"
 
 namespace Ui {
 class MainWindow;
@@ -17,13 +18,33 @@ public:
     ~MainWindow();
 
 private slots:
-    void update();
+    void gotUpdate();
+    void sendUpdate();
+
+    void on_connectButton_clicked();
+    void on_startButton_clicked();
+
+    void on_endButton_clicked();
+
+    void on_callsign_textChanged(const QString &arg1);
+
+    void on_password_textChanged(const QString &arg1);
 
 private:
     Ui::MainWindow *ui;
     QUdpSocket* sock;
-    float startFuel;
-    float maxG;
+    VA va;
+    QTimer timer;
+    qint32 state; // connected, preflight, taxi-to-runway, climb, cruise, descend, taxi-to-gate, postflight, -1=offline
+    qint32 pilot;
+    QString flight;
+    qint64 startTime;
+    float startLat, startLon;
+    float startFuel, maxG;
+    float heading, lat, lon;
+    float flaps;
+    bool engine[4];
+    bool gear;
 };
 
 #endif // MAINWINDOW_H

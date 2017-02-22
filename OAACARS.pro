@@ -13,8 +13,17 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    va.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    va.h
 
 FORMS    += mainwindow.ui
+
+DISTFILES += \
+    notes.txt
+
+LIBS += -L$$PWD -lcurl
+
+win32:LIBS += -lz -lws2_32
