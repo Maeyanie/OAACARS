@@ -82,3 +82,17 @@ QString VA::sendUpdate(QJsonDocument& data) {
     qInfo("URL: %s\npostData: %s\nret: %d\nresponse: %s\n", url.data(), postData.data(), ret, curlData.data());
     return curlData;
 }
+
+QString VA::sendPirep(QJsonDocument& data) {
+    QByteArray url = QUrl(baseUrl+"receivevampirep.php").toString().toUtf8();
+    QByteArray postData = data.toJson();
+
+    curl_easy_setopt(curl, CURLOPT_URL, url.data());
+    curl_easy_setopt(curl, CURLOPT_POST, 1);
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postData.data());
+
+    curlData.clear();
+    qint32 ret = curl_easy_perform(curl);
+    qInfo("URL: %s\npostData: %s\nret: %d\nresponse: %s\n", url.data(), postData.data(), ret, curlData.data());
+    return curlData;
+}

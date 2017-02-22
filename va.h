@@ -13,6 +13,7 @@ public:
     QString getAircraft();
     QString pilotConnection();
     QString sendUpdate(QJsonDocument &data);
+    QString sendPirep(QJsonDocument &data);
 
 private:
     CURL* curl;

@@ -152,8 +152,8 @@ void MainWindow::gotUpdate() {
                 ui->altitude->setText(QString::number(val[2], 'f', 0)+" ft");
                 ui->lat->setText(QString::number(val[0], 'f', 2)+" deg");
                 ui->lon->setText(QString::number(val[1], 'f', 2)+" deg");
-                lat = val[0];
-                lon = val[1];
+                states.lat = val[0];
+                states.lon = val[1];
                 break;
             case 21: //        x     y     z     vX    vY    vZ   dstft dstnm
                 break;
@@ -186,13 +186,13 @@ void MainWindow::sendUpdate() {
     msg["departure"] = ui->depIcao->text();
     msg["arrival"] = ui->arrIcao->text();
     msg["ias"] = ui->ias->text();
-    msg["heading"] = heading;
+    msg["heading"] = states.heading;
     msg["gs"] = ui->gs->text();
     msg["altitude"] = ui->altitude->text();
     msg["fuel"] = ui->fob->text();
     msg["fuel_used"] = ui->fu->text();
-    msg["latitude"] = lat;
-    msg["longitude"] = lon;
+    msg["latitude"] = states.lat;
+    msg["longitude"] = states.lon;
     msg["time_passed"] = time(NULL) - startTime;
     msg["plane_type"] = ui->acIcao->text();
 
@@ -279,7 +279,7 @@ void MainWindow::on_connectButton_clicked()
     ui->arrIcao->setText(data["arrival"].toString());
     ui->alt1->setText(data["alternative"].toString());
     ui->route->setPlainText(data["route"].toString());
-    ui->tailNumber->setText(data["callsign"].toString());
+    ui->flightNo->setText(data["callsign"].toString());
     ui->depTime->setText(data["etd"].toString());
     ui->acIcao->setText(data["plane_icao"].toString());
     ui->eet->setText(data["duration"].toString());
@@ -301,13 +301,13 @@ void MainWindow::on_startButton_clicked()
     // 2017-2-22 10:24:31.964 OPA1115
     flight = QDateTime::currentDateTime().toString("yyyyMdhhmmsszzz")+ui->flightNo->text();
     startTime = time(NULL);
-    startLat = lat;
-    startLon = lon;
+    startLat = states.lat;
+    startLon = states.lon;
 
     state = 1;
-    flaps = 0;
-    gear = 1;
-    engine[0] = engine[1] = engine[2] = engine[3] = 0;
+    states.flaps = 0;
+    states.gear = 1;
+    states.engine[0] = states.engine[1] = states.engine[2] = states.engine[3] = 0;
 
     sendUpdate();
     timer.start(60000);
@@ -318,8 +318,110 @@ void MainWindow::on_startButton_clicked()
 void MainWindow::on_endButton_clicked()
 {
     timer.stop();
+    ui->statusBar->showMessage("Submitting...");
+
+    /* [{"flightId":"2017222102431964OPA1115","weight_unit":"Kg","departure":"EDDM","arrival":"EHAM","gvauserId":"40",
+     * "callsign":"OPA1115","departure_time":"1225","cruise_speed":"","flight_level":"","pax":"113","cargo":"5091","eet":"",
+     * "endurance":"","alt1":"EHAM","alt2":"","route":"INPUD UPALA TENLO ALAXA BOREP TESDU ALIBU DEMAB MASEK EDEGA MAPOX BIGGE RELBI RKN",
+     * "remarks":"","flight_type":"IFR","aircraft":"X737-800_V500 ","aircraft_type":"B733","aircraft_registry":"D-ANKY",
+     * "flight_status":"FLIGHT FINISHED","flight_duration":"1.08","flight_fuel":"1716.53","block_fuel":"1785.23",
+     * "flight_date":"2017-2-22 11:45:12","distance":"373.2","landing_vs":"0.00","landing_ias":"0.00","landing_forceg":"0.0",
+     * "landing_bank":"0.0","landing_pitch":"0.0","landing_winddeg":"0","landing_windknots":"0","landing_oat":"14","landing_flaps":"0",
+     * "landing_light_bea":"0","landing_light_nav":"0","landing_light_ldn":"0","landing_light_str":"0","log_start":"2017-2-22 10:37:8",
+     * "flight_start":"2017-2-22 10:38:31","log_end":"2017-2-22 11:45:12","flight_end":"","zfw":"47840","departure_metar":"","arrival_metar":"",
+     * "network":"OFFLINE","comments":"","pause_time":"0.00","crash":"1","beacon_off":"0","ias_below_10000_ft":"1","lights_below_10000_ft":"0",
+     * "lights_above_10000_ft":"1","overspeed":"0","pause":"0","refuel":"0","slew":"0","taxi_no_lights":"1","takeoff_ldn_lights_off":"0",
+     * "landing_ldn_lights_off":"0","landed_not_in_planned":"0","stall":"1","taxi_speed":"0","qnh_takeoff":"0","qnh_landing":"0","final_fuel":"66",
+     * "landing_hdg":"","aircraftreg":""}]
+     */
+
+    QJsonObject msg;
+    msg["flightId"] = flight;
+    msg["weight_unit"] = "Lbs";
+    msg["departure"] = ui->depIcao->text();
+    msg["arrival"] = ui->arrIcao->text();
+    msg["gvauserId"] = QString::number(pilot);
+    msg["callsign"] = ui->flightNo->text();
+    msg["departure_time"] = ui->depTime->text();
+    msg["cruise_speed"] = ui->cruiseSpeed->text();
+    msg["flight_level"] = ui->altitude->text();
+    msg["pax"] = ui->pax->text();
+    msg["cargo"] = ui->cargo->text();
+    msg["eet"] = ui->eet->text();
+    msg["endurance"] = ui->endurance->text();
+    msg["alt1"] = ui->alt1->text();
+    msg["alt2"] = ui->alt2->text();
+    msg["route"] = ui->route->toPlainText();
+    msg["remarks"] = ui->remarks->toPlainText();
+    msg["flight_type"] = ui->flightType->currentText();
+    msg["aircraft"] = ui->aircraft->text();
+    msg["aircraft_type"] = ui->acIcao->text();
+    msg["aircraft_registry"] = ui->tailNumber->text();
+    msg["flight_status"] = "FLIGHT FINISHED";
+    msg["flight_duration"] = QString::number((time(NULL) - startTime) / 60.0, 'f', 2);
+    msg["flight_fuel"] = ui->fu->text();
+    msg["block_fuel"] = ui->fu->text();
+    msg["flight_date"] = QDateTime::currentDateTime().toString("yyyy-M-d hh:mm:ss");
+
+    msg["distance"] = "0";
+
+    msg["landing_vs"] = QString::number(landing.vs);
+    msg["landing_ias"] = QString::number(landing.ias);
+    msg["landing_forceg"] = QString::number(landing.g);
+    msg["landing_bank"] = QString::number(landing.bank);
+    msg["landing_pitch"] = QString::number(landing.pitch);
+    msg["landing_winddeg"] = QString::number(landing.winddeg);
+    msg["landing_windknots"] = QString::number(landing.windknots);
+    msg["landing_oat"] = QString::number(landing.oat);
+    msg["landing_flaps"] = QString::number(landing.flaps);
+    msg["landing_light_bea"] = QString::number(landing.bea);
+    msg["landing_light_nav"] = QString::number(landing.nav);
+    msg["landing_light_ldn"] = QString::number(landing.ldn);
+    msg["landing_light_str"] = QString::number(landing.str);
+
+    msg["log_start"] = QDateTime::fromTime_t(startTime).toString("yyyy-M-d hh:mm:ss");
+    msg["flight_start"] = QDateTime::fromTime_t(startTime).toString("yyyy-M-d hh:mm:ss");
+    msg["log_end"] = QDateTime::currentDateTime().toString("yyyy-M-d hh:mm:ss");
+    msg["flight_end"] = QDateTime::currentDateTime().toString("yyyy-M-d hh:mm:ss");
+
+    msg["zfw"] = ui->zfw->text();
+    msg["departure_metar"] = "";
+    msg["arrival_metar"] = "";
+    msg["network"] = "UNSUPPORTED";
+    msg["comments"] = "";
+
+    msg["pause_time"] = "0.00";
+    msg["crash"] = QString::number(mistakes.crash);
+    msg["beacon_off"] = QString::number(mistakes.beaconOff);
+    msg["ias_below_10000_ft"] = QString::number(mistakes.iasLow);
+    msg["lights_below_10000_ft"] = QString::number(mistakes.lightsLow);
+    msg["lights_above_10000_ft"] = QString::number(mistakes.lightsHigh);
+    msg["overspeed"] = QString::number(mistakes.overspeed);
+    msg["pause"] = QString::number(mistakes.pause);
+    msg["refuel"] = QString::number(mistakes.refuel);
+    msg["slew"] = QString::number(mistakes.slew);
+    msg["taxi_no_lights"] = QString::number(mistakes.taxiLights);
+    msg["takeoff_ldn_lights_off"] = QString::number(mistakes.takeoffLights);
+    msg["landing_ldn_lights_off"] = QString::number(mistakes.landingLights);
+    msg["landed_not_in_planned"] = QString::number(mistakes.landingAirport);
+    msg["stall"] = QString::number(mistakes.stall);
+    msg["taxi_speed"] = QString::number(mistakes.taxiSpeed);
+    msg["qnh_takeoff"] = QString::number(mistakes.qnhTakeoff);
+    msg["qnh_landing"] = QString::number(mistakes.qnhLanding);
+
+    msg["final_fuel"] = ui->fob->text();
+    msg["landing_hdg"] = "";
+    msg["aircraftreg"] = "";
+
+    QJsonArray ja;
+    ja.append(msg);
+    QJsonDocument json;
+    json.setArray(ja);
+    va.sendPirep(json);
+
     state = 0;
     ui->endButton->setEnabled(false);
+    ui->statusBar->clearMessage();
     ui->statusBar->showMessage("Flight submitted.", 10000);
 }
 

@@ -41,10 +41,30 @@ private:
     qint64 startTime;
     float startLat, startLon;
     float startFuel, maxG;
-    float heading, lat, lon;
-    float flaps;
-    bool engine[4];
-    bool gear;
+
+    struct States {
+        float heading, lat, lon;
+        float flaps;
+        bool engine[4];
+        bool gear;
+    } states;
+
+    struct Landing {
+        float vs, ias, g, bank, pitch, winddeg, windknots, oat, flaps;
+        bool bea, nav, ldn, str;
+    } landing;
+
+    struct Mistakes {
+        bool crash, beaconOff, iasLow, lightsLow, lightsHigh, overspeed, pause,
+            refuel, slew, taxiLights, takeoffLights, landingLights,
+            landingAirport, stall, taxiSpeed, qnhTakeoff, qnhLanding;
+
+        void reset() {
+            crash = beaconOff = iasLow = lightsLow = lightsHigh = overspeed = pause
+                    = refuel = slew = taxiLights = takeoffLights = landingLights
+                    = landingAirport = stall = taxiSpeed = qnhTakeoff = qnhLanding = 0;
+        }
+    } mistakes;
 };
 
 #endif // MAINWINDOW_H
