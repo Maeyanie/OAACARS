@@ -4,41 +4,6 @@
 #include <QMessageBox>
 #include <QTimer>
 
-/*
-Events:
-    ias,
-    altitude,
-    radio_altimeter,
-    heading,
-    fuel,
-    fuel_used,
-    log_time,
-    landing_vs,
-    flaps,
-    light_nav,
-    light_taxi,
-    light_sto,
-    light_lnd,
-    light_bea,
-
-Tracks:
-    ias
-    heading
-    gs
-    altitude
-    fuel
-    fuel_used
-    latitude
-    longitude
-    time_passed
-    oat
-    wind_deg
-    wind_knots
-    plane_type
-Needs to be calc'd from: latitude, longitude
-    perc_completed
-    pending_nm
-    */
 void memcat(char** ptr, const char* data, int len) {
     memcpy(*ptr, data, len);
     (*ptr) += len;
