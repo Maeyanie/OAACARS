@@ -40,7 +40,7 @@ void MainWindow::taxi() {
 void MainWindow::takeoff() {
     onTakeoff = cur;
 
-    state = CLIMB;
+    state = CRUISE;
     newEvent("TAKEOFF");
 }
 
