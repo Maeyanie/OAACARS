@@ -89,22 +89,25 @@ void MainWindow::engineStop(int e) {
 }
 
 void MainWindow::refuel() {
-    if (mistakes.refuel == 0) {
-        mistakes.refuel = 1;
-        newEvent("REFUEL", true);
-    }
+    static qint64 last = 0;
+    if (last < time(NULL) - 10) newEvent("REFUEL", true);
+    last = time(NULL);
+
+    mistakes.refuel = 1;
 }
 
 void MainWindow::overspeed() {
-    if (mistakes.overspeed == 0) {
-        mistakes.overspeed = 1;
-        newEvent("OVERSPEED", true);
-    }
+    static qint64 last = 0;
+    if (last < time(NULL) - 10) newEvent("OVERSPEED", true);
+    last = time(NULL);
+
+    mistakes.overspeed = 1;
 }
 
 void MainWindow::stall() {
-    if (mistakes.stall == 0) {
-        mistakes.stall = 1;
-        newEvent("STALL", true);
-    }
+    static qint64 last = 0;
+    if (last < time(NULL) - 10) newEvent("STALL", true);
+    last = time(NULL);
+
+    mistakes.stall = 1;
 }
