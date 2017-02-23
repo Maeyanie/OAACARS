@@ -254,7 +254,7 @@
        <rect>
         <x>20</x>
         <y>320</y>
-        <width>141</width>
+        <width>211</width>
         <height>16</height>
        </rect>
       </property>
@@ -548,27 +548,33 @@
    <widget class="QLabel" name="label_15">
     <property name="geometry">
      <rect>
-      <x>36</x>
+      <x>10</x>
       <y>510</y>
-      <width>47</width>
-      <height>13</height>
+      <width>71</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
      <string>Callsign</string>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
    </widget>
    <widget class="QLabel" name="label_16">
     <property name="geometry">
      <rect>
-      <x>26</x>
+      <x>10</x>
       <y>540</y>
-      <width>47</width>
-      <height>13</height>
+      <width>71</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
      <string>Password</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QLineEdit" name="callsign">
