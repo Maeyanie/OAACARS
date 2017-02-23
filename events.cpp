@@ -75,10 +75,10 @@ void MainWindow::engineStart(int e) {
     newEvent(QString("STARTING ENGINE %1").arg(e+1));
     cur.engine[e] = 1;
 
-    if (state == 1) {
+    if (state == PREFLIGHT) {
         int offCount = 0;
         for (int x = 0; x < 8; x++) {
-            if (cur.engine[e] == 0) offCount++;
+            if (cur.engine[x] == 0) offCount++;
         }
         qInfo("engineStart: Still have %d engines off.\n", offCount);
         if (offCount == 0) taxi();
@@ -88,7 +88,7 @@ void MainWindow::engineStop(int e) {
     newEvent(QString("ENGINE %1 STOP").arg(e+1));
     cur.engine[e] = 0;
 
-    if (state == 6) deboard();
+    if (state == TAXITOGATE) deboard();
 }
 
 void MainWindow::refuel() {

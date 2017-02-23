@@ -186,6 +186,8 @@ void MainWindow::on_startButton_clicked()
     for (int x = 0; x < 8; x++) cur.engine[x] = 0;
     mistakes.reset();
 
+    newEvent("FLIGHT STARTED");
+
     sendUpdate();
     timer.start(60000);
     ui->startButton->setEnabled(false);

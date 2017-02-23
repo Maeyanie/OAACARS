@@ -39,9 +39,13 @@ void MainWindow::gotUpdate() {
 
                 cur.vs = val[2];
                 if (state >= CLIMB && state <= DESCEND) {
-                    if (val[2] > 100.0 && state != CLIMB) climb();
-                    else if (val[2] > -100.0 && state != CRUISE) cruise();
-                    else if (state != DESCEND) descend();
+                    if (val[2] > 200.0) {
+                        if (state != CLIMB) climb();
+                    } else if (val[2] > -200.0) {
+                        if (state != CRUISE) cruise();
+                    } else {
+                        if (state != DESCEND) descend();
+                    }
                 }
                 if (fabs(val[3]) < 500 && fabs(val[3]) > maxG) {
                     maxG = fabs(val[3]);
@@ -74,7 +78,7 @@ void MainWindow::gotUpdate() {
                 cur.asl = val[2];
                 cur.agl = val[3];
                 if (state < CLIMB && val[4] == 0.0) takeoff();
-                else if (state < TAXITOGATE && val[4] == 1.0) landing();
+                else if (state >= CLIMB && state <= DESCEND && val[4] == 1.0) landing();
                 break;
 
             case 21: //        x     y     z     vX    vY    vZ   dstft dstnm
@@ -82,7 +86,7 @@ void MainWindow::gotUpdate() {
                 break;
 
             case 45: // FF
-                if (state > CONNECTED) {
+                if (state >= PREFLIGHT) {
                     for (int x = 0; x < 8; x++) {
                         if ((val[x] > 0.0) && !cur.engine[x]) engineStart(x);
                         else if ((val[x] == 0.0) && cur.engine[x]) engineStop(x);
@@ -95,7 +99,7 @@ void MainWindow::gotUpdate() {
                 break;
 
             case 63: // payload weights and CG
-                if (state == CONNECTED) startFuel = val[2];
+                if (state <= CONNECTED) startFuel = val[2];
 
                 ui->fob->setText(QString::number(val[2], 'f', 0)+" lb");
                 ui->fu->setText(QString::number(startFuel-val[2], 'f', 0)+" lb");
