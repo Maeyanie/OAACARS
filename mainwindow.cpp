@@ -137,19 +137,13 @@ void MainWindow::on_connectButton_clicked()
                                  "Please send me this text:\n"+ret, QMessageBox::Ok);
     }
 
-    // [{"id":"40","departure":"","arrival":"","alternative":"","route":"","callsign":"","etd":"","plane_icao":"","duration":"","registry":"","pax":"","cargo":""}]
     ret = va.pilotConnection();
     QJsonParseError parseErr;
     QJsonDocument pc = QJsonDocument::fromJson(ret.toUtf8(), &parseErr);
-
-    qInfo("isArray=%d isObject=%d parseErr=%s\n",
-          pc.isArray(), pc.isObject(), parseErr.errorString().toUtf8().data());
-
     QJsonArray ja = pc.array();
     QJsonValue jv = ja.first();
     QJsonObject data = jv.toObject();
     pilot = data["id"].toString().toInt();
-    qInfo("Got pilot %d\n", pilot);
 
     if (data.find("departure") != data.end() && data["departure"] != "") {
         int yn = QMessageBox::question(this, "Flight Plan", "A flight plan was found. Load it?", QMessageBox::Yes, QMessageBox::No);
