@@ -32,6 +32,8 @@ void MainWindow::gotUpdate() {
 
                 cur.ias = val[0];
                 cur.gs = val[3];
+
+                if (state <= PREFLIGHT && cur.gs > 2.0) taxi();
                 break;
 
             case 4: //         mach  ----- fpm   Gnorm Gaxil Gside ----- -----
@@ -77,12 +79,15 @@ void MainWindow::gotUpdate() {
                 cur.lon = val[1];
                 cur.asl = val[2];
                 cur.agl = val[3];
-                if (state < CLIMB && val[4] == 0.0) takeoff();
-                else if (state >= CLIMB && state <= DESCEND && val[4] == 1.0) landing();
+                if ((state < CLIMB || state > DESCEND) && val[3] > 10.0) takeoff();
+                else if (state >= CLIMB && state <= DESCEND && val[3] < 1.0) landing();
                 break;
 
             case 21: //        x     y     z     vX    vY    vZ   dstft dstnm
                 cur.distance = val[7];
+                break;
+
+            case 34: // engine power
                 break;
 
             case 45: // FF
@@ -90,10 +95,6 @@ void MainWindow::gotUpdate() {
                     for (int x = 0; x < 8; x++) {
                         if ((val[x] > 0.0) && !cur.engine[x]) engineStart(x);
                         else if ((val[x] == 0.0) && cur.engine[x]) engineStop(x);
-                    }
-                } else {
-                    for (int x = 0; x < 8; x++) {
-                        if (val[x] < 0.0) cur.engine[x] = -1;
                     }
                 }
                 break;
