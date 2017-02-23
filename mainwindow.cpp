@@ -212,7 +212,7 @@ void MainWindow::on_endButton_clicked()
     msg["callsign"] = ui->flightNo->text();
     msg["departure_time"] = ui->depTime->text();
     msg["cruise_speed"] = ui->cruiseSpeed->text();
-    msg["flight_level"] = ui->altitude->text();
+    msg["flight_level"] = ui->cruiseAlt->text();
     msg["pax"] = ui->pax->text();
     msg["cargo"] = ui->cargo->text();
     msg["eet"] = ui->eet->text();
@@ -227,13 +227,13 @@ void MainWindow::on_endButton_clicked()
     msg["aircraft_registry"] = ui->tailNumber->text();
     msg["flight_status"] = "FLIGHT FINISHED";
     msg["flight_duration"] = QString::number((onLanding.time-onTakeoff.time) / 3600.0, 'f', 2);
-    msg["flight_fuel"] = ui->fu->text();
-    msg["block_fuel"] = QString::number(onTakeoff.fuel-onLanding.fuel, 'f', 0);
+    msg["flight_fuel"] = QString::number(onTakeoff.fuel-onLanding.fuel, 'f', 0);
+    msg["block_fuel"] = QString::number(startFuel-cur.fuel, 'f', 0);
     msg["final_fuel"] = ui->fob->text();
     msg["zfw"] = ui->zfw->text();
     msg["flight_date"] = QDateTime::currentDateTime().toString("yyyy-M-d hh:mm:ss");
 
-    msg["distance"] = "0";
+    msg["distance"] = onLanding.distance;
 
     msg["landing_vs"] = QString::number(onLanding.vs);
     msg["landing_ias"] = QString::number(onLanding.ias);
