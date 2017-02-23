@@ -52,7 +52,7 @@ private slots:
     void on_password_textChanged(const QString &arg1);
 
 private:
-    void event(QString desc, bool critical = 0);
+    void newEvent(QString desc, bool critical = 0);
     void taxi();
     void takeoff();
     void climb();

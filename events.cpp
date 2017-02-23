@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-void MainWindow::event(QString desc, bool critical) {
+void MainWindow::newEvent(QString desc, bool critical) {
     QJsonObject e;
     e["flight_id"] = flight;
     e["event_id"] = QString::number(eventId++);
@@ -29,39 +29,39 @@ void MainWindow::event(QString desc, bool critical) {
         ui->flightEvents->append(QTime::currentTime().toString("hh:mm:ss")+": "+desc);
     }
 
-    va.event(e);
+    va.newEvent(e);
 }
 
 void MainWindow::taxi() {
     state = TAXITORWY;
-    event("TAXI TO RWY");
+    newEvent("TAXI TO RWY");
 }
 
 void MainWindow::takeoff() {
     onTakeoff = cur;
 
     state = CLIMB;
-    event("TAKEOFF");
+    newEvent("TAKEOFF");
 }
 
 void MainWindow::climb() {
     state = CLIMB;
-    event("CLIMB");
+    newEvent("CLIMB");
 }
 
 void MainWindow::cruise() {
     state = CRUISE;
-    event("CRUISE");
+    newEvent("CRUISE");
 }
 
 void MainWindow::descend() {
     state = DESCEND;
-    event("DESCEND");
+    newEvent("DESCEND");
 }
 
 void MainWindow::landing() {
     state = TAXITOGATE;
-    event("LANDING");
+    newEvent("LANDING");
 
     onLanding = cur;
 
@@ -72,7 +72,7 @@ void MainWindow::deboard() {
 }
 
 void MainWindow::engineStart(int e) {
-    event(QString("STARTING ENGINE %1").arg(e+1));
+    newEvent(QString("STARTING ENGINE %1").arg(e+1));
     cur.engine[e] = 1;
 
     if (state == 1) {
@@ -85,7 +85,7 @@ void MainWindow::engineStart(int e) {
     }
 }
 void MainWindow::engineStop(int e) {
-    event(QString("ENGINE %1 STOP").arg(e+1));
+    newEvent(QString("ENGINE %1 STOP").arg(e+1));
     cur.engine[e] = 0;
 
     if (state == 6) deboard();
@@ -94,20 +94,20 @@ void MainWindow::engineStop(int e) {
 void MainWindow::refuel() {
     if (mistakes.refuel == 0) {
         mistakes.refuel = 1;
-        event("REFUEL", true);
+        newEvent("REFUEL", true);
     }
 }
 
 void MainWindow::overspeed() {
     if (mistakes.overspeed == 0) {
         mistakes.overspeed = 1;
-        event("OVERSPEED", true);
+        newEvent("OVERSPEED", true);
     }
 }
 
 void MainWindow::stall() {
     if (mistakes.stall == 0) {
         mistakes.stall = 1;
-        event("STALL", true);
+        newEvent("STALL", true);
     }
 }

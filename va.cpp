@@ -101,7 +101,7 @@ QString VA::sendPirep(QJsonDocument& data) {
     return curlData;
 }
 
-void VA::event(QJsonObject& e) {
+void VA::newEvent(QJsonObject& e) {
     events.append(e);
 }
 QString VA::sendEvents() {
@@ -121,7 +121,7 @@ QString VA::sendEvents() {
     return curlData;
 }
 
-void VA::track(QJsonObject& t) {
+void VA::newTrack(QJsonObject& t) {
     tracks.append(t);
 }
 QString VA::sendTracks() {

@@ -164,7 +164,7 @@ void MainWindow::sendUpdate() {
     track["flight_status"] = statetext;
     track["plane_type"] = ui->acIcao->text();
     track["pending_nm"] = QString::number(cur.remaining, 'f', 0);
-    va.track(track);
+    va.newTrack(track);
 
 
 

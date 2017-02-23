@@ -14,8 +14,8 @@ public:
     QString pilotConnection();
     QString sendUpdate(QJsonDocument &data);
     QString sendPirep(QJsonDocument &data);
-    void event(QJsonObject& e);
-    void track(QJsonObject& t);
+    void newEvent(QJsonObject& e);
+    void newTrack(QJsonObject& t);
     QString sendEvents();
     QString sendTracks();
 
