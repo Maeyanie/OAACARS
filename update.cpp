@@ -132,14 +132,14 @@ void MainWindow::gotUpdate() {
 void MainWindow::sendUpdate() {
     QString statetext;
     switch (state) {
-    case 0: // Should never happen, but just in case.
-    case 1: statetext = "BOARDING"; break;
-    case 2: statetext = "TAXI TO THE RWY"; break;
-    case 3: statetext = "CLIMB"; break;
-    case 4: statetext = "CRUISE"; break;
-    case 5: statetext = "DESCEND"; break;
-    case 6: statetext = "TAXI TO THE GATE"; break;
-    case 7: statetext = "DEBOARDING"; break;
+    case CONNECTED: // Should never happen, but just in case.
+    case PREFLIGHT: statetext = "BOARDING"; break;
+    case TAXITORWY: statetext = "TAXI TO THE RWY"; break;
+    case CLIMB: statetext = "CLIMB"; break;
+    case CRUISE: statetext = "CRUISE"; break;
+    case DESCEND: statetext = "DESCEND"; break;
+    case TAXITOGATE: statetext = "TAXI TO THE GATE"; break;
+    case POSTFLIGHT: statetext = "DEBOARDING"; break;
     default: statetext = "UNKNOWN";
     }
 
