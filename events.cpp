@@ -69,6 +69,7 @@ void MainWindow::landing() {
 }
 void MainWindow::deboard() {
     state = POSTFLIGHT;
+    newEvent("DEBOARDING");
 }
 
 void MainWindow::engineStart(int e) {
