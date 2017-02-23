@@ -600,17 +600,20 @@
    <widget class="QPushButton" name="connectButton">
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>70</x>
       <y>570</y>
       <width>91</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>Load FP</string>
+     <string>Connect</string>
     </property>
    </widget>
    <widget class="QPushButton" name="startButton">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>290</x>
@@ -624,6 +627,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="endButton">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>290</x>

@@ -119,6 +119,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_connectButton_clicked()
 {
+    timer.stop();
     ui->statusBar->showMessage("Connecting...");
 
     QString ret = va.login(ui->callsign->text(), ui->password->text());
@@ -150,24 +151,28 @@ void MainWindow::on_connectButton_clicked()
     pilot = data["id"].toString().toInt();
     qInfo("Got pilot %d\n", pilot);
 
-    ui->depIcao->setText(data["departure"].toString());
-    ui->arrIcao->setText(data["arrival"].toString());
-    ui->alt1->setText(data["alternative"].toString());
-    ui->route->setPlainText(data["route"].toString());
-    ui->flightNo->setText(data["callsign"].toString());
-    ui->depTime->setText(data["etd"].toString());
-    ui->acIcao->setText(data["plane_icao"].toString());
-    ui->eet->setText(data["duration"].toString());
-    ui->tailNumber->setText(data["registry"].toString());
-    ui->pax->setText(data["pax"].toString());
-    ui->cargo->setText(data["cargo"].toString());
+    if (data.find("departure") != data.end() && data["departure"] != "") {
+        int yn = QMessageBox::question(this, "Flight Plan", "A flight plan was found. Load it?", QMessageBox::Yes, QMessageBox::No);
+        if (yn == QMessageBox::Yes) {
+            ui->depIcao->setText(data["departure"].toString());
+            ui->arrIcao->setText(data["arrival"].toString());
+            ui->alt1->setText(data["alternative"].toString());
+            ui->route->setPlainText(data["route"].toString());
+            ui->flightNo->setText(data["callsign"].toString());
+            ui->depTime->setText(data["etd"].toString());
+            ui->acIcao->setText(data["plane_icao"].toString());
+            ui->eet->setText(data["duration"].toString());
+            ui->tailNumber->setText(data["registry"].toString());
+            ui->pax->setText(data["pax"].toString());
+            ui->cargo->setText(data["cargo"].toString());
+        }
+    }
 
     state = CONNECTED;
     ui->statusBar->clearMessage();
     ui->statusBar->showMessage("Connected.");
     ui->startButton->setEnabled(true);
     ui->endButton->setEnabled(false);
-    timer.stop();
 }
 
 void MainWindow::on_startButton_clicked()
@@ -221,7 +226,7 @@ void MainWindow::on_endButton_clicked()
     msg["aircraft_type"] = ui->acIcao->text();
     msg["aircraft_registry"] = ui->tailNumber->text();
     msg["flight_status"] = "FLIGHT FINISHED";
-    msg["flight_duration"] = QString::number((onLanding.time-onTakeoff.time) / 60.0, 'f', 2);
+    msg["flight_duration"] = QString::number((onLanding.time-onTakeoff.time) / 3600.0, 'f', 2);
     msg["flight_fuel"] = ui->fu->text();
     msg["block_fuel"] = QString::number(onTakeoff.fuel-onLanding.fuel, 'f', 0);
     msg["final_fuel"] = ui->fob->text();
