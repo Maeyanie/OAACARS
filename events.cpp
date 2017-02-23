@@ -1,58 +1,113 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+void MainWindow::event(QString desc, bool critical) {
+    QJsonObject e;
+    e["flight_id"] = flight;
+    e["event_id"] = QString::number(eventId++);
+    e["event_description"] = desc;
+    e["event_timestamp"] = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    e["ias"] = QString::number(cur.ias, 'f', 0);
+    e["altitude"] = QString::number(cur.asl, 'f', 0);
+    e["radio_altimeter"] = QString::number(cur.agl, 'f', 0);
+    e["fuel"] = QString::number(cur.fuel, 'f', 0);
+    e["fuel_used"] = QString::number(startFuel - cur.fuel, 'f', 0);
+    e["log_time"] = QString::number(time(NULL) - startTime);
+    e["landing_vs"] = QString::number(onLanding.vs, 'f', 2);
+    e["light_nav"] = QString::number(cur.nav);
+    e["light_taxi"] = QString::number(cur.txi);
+    e["light_sto"] = QString::number(cur.str);
+    e["light_lnd"] = QString::number(cur.ldn);
+    e["light_bea"] = QString::number(cur.bea);
+    e["heading"] = QString::number(cur.heading);
+    e["flaps"] = QString::number(cur.flaps);
+    e["critical"] = critical ? "1" : "0";
+
+    if (critical) {
+        ui->critEvents->append(QTime::currentTime().toString("hh:mm:ss")+": "+desc);
+    } else {
+        ui->flightEvents->append(QTime::currentTime().toString("hh:mm:ss")+": "+desc);
+    }
+
+    va.event(e);
+}
+
+void MainWindow::taxi() {
+    state = TAXITORWY;
+    event("TAXI TO RWY");
+}
+
 void MainWindow::takeoff() {
     onTakeoff = cur;
-    onTakeoff.time = time(NULL);
 
-    climb();
+    state = CLIMB;
+    event("TAKEOFF");
 }
 
 void MainWindow::climb() {
-    state = 3;
+    state = CLIMB;
+    event("CLIMB");
 }
 
 void MainWindow::cruise() {
-    state = 4;
+    state = CRUISE;
+    event("CRUISE");
 }
 
 void MainWindow::descend() {
-    state = 5;
+    state = DESCEND;
+    event("DESCEND");
 }
 
 void MainWindow::landing() {
-    state = 6;
+    state = TAXITOGATE;
+    event("LANDING");
 
     onLanding = cur;
-    onLanding.time = time(NULL);
+
+    ui->endButton->setEnabled(true);
+}
+void MainWindow::deboard() {
+    state = POSTFLIGHT;
 }
 
 void MainWindow::engineStart(int e) {
-    ui->flightEvents->append(QString("ENGINE %1 START").arg(e+1));
+    event(QString("STARTING ENGINE %1").arg(e+1));
     cur.engine[e] = 1;
+
+    if (state == 1) {
+        int offCount = 0;
+        for (int x = 0; x < 8; x++) {
+            if (cur.engine[e] == 0) offCount++;
+        }
+        qInfo("engineStart: Still have %d engines off.\n", offCount);
+        if (offCount == 0) taxi();
+    }
 }
 void MainWindow::engineStop(int e) {
-    ui->flightEvents->append(QString("ENGINE %1 STOP").arg(e+1));
+    event(QString("ENGINE %1 STOP").arg(e+1));
     cur.engine[e] = 0;
+
+    if (state == 6) deboard();
 }
 
 void MainWindow::refuel() {
     if (mistakes.refuel == 0) {
         mistakes.refuel = 1;
-        ui->critEvents->append("REFUEL");
+        event("REFUEL", true);
     }
 }
 
 void MainWindow::overspeed() {
     if (mistakes.overspeed == 0) {
         mistakes.overspeed = 1;
-        ui->critEvents->append("OVERSPEED");
+        event("OVERSPEED", true);
     }
 }
 
 void MainWindow::stall() {
     if (mistakes.stall == 0) {
         mistakes.stall = 1;
-        ui->critEvents->append("STALL");
+        event("STALL", true);
     }
 }

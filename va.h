@@ -14,6 +14,10 @@ public:
     QString pilotConnection();
     QString sendUpdate(QJsonDocument &data);
     QString sendPirep(QJsonDocument &data);
+    void event(QJsonObject& e);
+    void track(QJsonObject& t);
+    QString sendEvents();
+    QString sendTracks();
 
 private:
     CURL* curl;
@@ -21,6 +25,8 @@ private:
     QString baseUrl;
     QString username;
     QString password;
+    QJsonArray events;
+    QJsonArray tracks;
 };
 
 #endif // VA_H

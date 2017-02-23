@@ -10,6 +10,7 @@ void MainWindow::gotUpdate() {
     float val[8];
 
     while (sock->hasPendingDatagrams()) {
+        cur.time = time(NULL);
         len = sock->readDatagram(buffer, 2048);
 
         //this->ui->textBrowser->append("Got packet len="+QString::number(len));
@@ -30,18 +31,19 @@ void MainWindow::gotUpdate() {
                 ui->gs->setText(QString::number(val[3], 'f', 0)+" kn");
 
                 cur.ias = val[0];
+                cur.gs = val[3];
                 break;
 
             case 4: //         mach  ----- fpm   Gnorm Gaxil Gside ----- -----
                 ui->vs->setText(QString::number(val[2], 'f', 1)+" fpm");
 
                 cur.vs = val[2];
-                if (state >= 3 && state <= 5) {
-                    if (val[2] > 100.0 && state != 3) climb();
-                    else if (val[2] > -100.0 && state != 4) cruise();
-                    else if (state != 5) descend();
+                if (state >= CLIMB && state <= DESCEND) {
+                    if (val[2] > 100.0 && state != CLIMB) climb();
+                    else if (val[2] > -100.0 && state != CRUISE) cruise();
+                    else if (state != DESCEND) descend();
                 }
-                if (fabs(val[3]) > maxG) {
+                if (fabs(val[3]) < 500 && fabs(val[3]) > maxG) {
                     maxG = fabs(val[3]);
                     ui->flightEvents->append("New Max G: "+QString::number(maxG, 'f', 1));
                 }
@@ -63,32 +65,43 @@ void MainWindow::gotUpdate() {
                 break;
 
             case 20: //        latd  lond  altsl altgl runwy aind lats  lonw
-                ui->altitude->setText(QString::number(val[2], 'f', 0)+" ft");
                 ui->lat->setText(QString::number(val[0], 'f', 2)+" deg");
                 ui->lon->setText(QString::number(val[1], 'f', 2)+" deg");
+                ui->altitude->setText(QString::number(val[2], 'f', 0)+" ft");
 
                 cur.lat = val[0];
                 cur.lon = val[1];
-                if (state < 3 && val[4] == 0.0) takeoff();
-                else if (state < 6 && val[4] == 1.0) landing();
+                cur.asl = val[2];
+                cur.agl = val[3];
+                if (state < CLIMB && val[4] == 0.0) takeoff();
+                else if (state < TAXITOGATE && val[4] == 1.0) landing();
                 break;
 
             case 21: //        x     y     z     vX    vY    vZ   dstft dstnm
+                cur.distance = val[7];
                 break;
 
-            case 34: // engine power
-                for (int x = 0; x < 8; x++) {
-                    if ((val[x] > 0.0) && !cur.engine[x]) engineStart(x);
-                    else if ((val[x] < 0.0) && cur.engine[x]) engineStop(x);
+            case 45: // FF
+                if (state > CONNECTED) {
+                    for (int x = 0; x < 8; x++) {
+                        if ((val[x] > 0.0) && !cur.engine[x]) engineStart(x);
+                        else if ((val[x] == 0.0) && cur.engine[x]) engineStop(x);
+                    }
+                } else {
+                    for (int x = 0; x < 8; x++) {
+                        if (val[x] < 0.0) cur.engine[x] = -1;
+                    }
                 }
                 break;
 
             case 63: // payload weights and CG
+                if (state == CONNECTED) startFuel = val[2];
+
                 ui->fob->setText(QString::number(val[2], 'f', 0)+" lb");
                 ui->fu->setText(QString::number(startFuel-val[2], 'f', 0)+" lb");
                 ui->zfw->setText(QString::number(val[0]+val[1], 'f', 0)+" lb");
 
-                if (val[2] > cur.fuel + 0.1) refuel();
+                if (val[2] > cur.fuel + 0.1 && state > PREFLIGHT) refuel();
                 cur.fuel = val[2];
                 break;
 
@@ -114,4 +127,75 @@ void MainWindow::gotUpdate() {
             }
         }
     }
+}
+
+void MainWindow::sendUpdate() {
+    QString statetext;
+    switch (state) {
+    case 0: // Should never happen, but just in case.
+    case 1: statetext = "BOARDING"; break;
+    case 2: statetext = "TAXI TO THE RWY"; break;
+    case 3: statetext = "CLIMB"; break;
+    case 4: statetext = "CRUISE"; break;
+    case 5: statetext = "DESCEND"; break;
+    case 6: statetext = "TAXI TO THE GATE"; break;
+    case 7: statetext = "DEBOARDING"; break;
+    default: statetext = "UNKNOWN";
+    }
+
+    QJsonObject track;
+    track["flight_id"] = flight;
+    track["track_id"] = QString::number(trackId++);
+    track["ias"] = QString::number(cur.ias, 'f', 0);
+    track["gs"] = QString::number(cur.gs, 'f', 0);
+    track["heading"] = QString::number(cur.heading, 'f', 0);
+    track["altitude"] = QString::number(cur.asl, 'f', 0);
+    track["agl"] = QString::number(cur.agl, 'f', 0);
+    track["fuel"] = QString::number(cur.fuel, 'f', 0);
+    track["fuel_used"] = QString::number(startFuel - cur.fuel, 'f', 0);
+    track["latitude"] = QString::number(cur.lat);
+    track["longitude"] = QString::number(cur.lon);
+    track["time_passed"] = QString::number(cur.time - startTime, 'f', 0);
+    track["time_flag"] = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    track["perc_completed"] = QString::number(cur.completed, 'f', 0);
+    track["oat"] = QString::number(cur.oat, 'f', 0);
+    track["wind_deg"] = QString::number(cur.winddeg, 'f', 0);
+    track["wind_knots"] = QString::number(cur.windknots, 'f', 0);
+    track["flight_status"] = statetext;
+    track["plane_type"] = ui->acIcao->text();
+    track["pending_nm"] = QString::number(cur.remaining, 'f', 0);
+    va.track(track);
+
+
+
+    QJsonObject msg;
+    msg["pilotId"] = pilot;
+    msg["flightId"] = flight;
+    msg["departure"] = ui->depIcao->text();
+    msg["arrival"] = ui->arrIcao->text();
+    msg["ias"] = ui->ias->text();
+    msg["heading"] = cur.heading;
+    msg["gs"] = ui->gs->text();
+    msg["altitude"] = ui->altitude->text();
+    msg["fuel"] = ui->fob->text();
+    msg["fuel_used"] = ui->fu->text();
+    msg["latitude"] = cur.lat;
+    msg["longitude"] = cur.lon;
+    msg["time_passed"] = time(NULL) - startTime;
+    msg["plane_type"] = ui->acIcao->text();
+    msg["perc_completed"] = QString::number(cur.completed, 'f', 0);
+    msg["pending_nm"] = QString::number(cur.remaining, 'f', 0);
+    msg["oat"] = QString::number(cur.oat, 'f', 0);
+    msg["wind_deg"] = QString::number(cur.winddeg, 'f', 0);
+    msg["wind_knots"] = QString::number(cur.windknots, 'f', 0);
+    msg["flight_status"] = statetext;
+
+    QJsonArray ja;
+    ja.append(msg);
+    QJsonDocument json;
+    json.setArray(ja);
+    va.sendUpdate(json);
+
+    ui->statusBar->clearMessage();
+    ui->statusBar->showMessage("Update sent: "+statetext, 10000);
 }

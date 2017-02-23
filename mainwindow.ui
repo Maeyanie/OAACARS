@@ -601,7 +601,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Connect</string>
+     <string>Load FP</string>
     </property>
    </widget>
    <widget class="QPushButton" name="startButton">

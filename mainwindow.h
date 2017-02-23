@@ -5,11 +5,23 @@
 #include <QUdpSocket>
 #include "va.h"
 
+enum State {
+    OFFLINE = -1,
+    CONNECTED = 0,
+    PREFLIGHT,
+    TAXITORWY,
+    CLIMB,
+    CRUISE,
+    DESCEND,
+    TAXITOGATE,
+    POSTFLIGHT
+};
+
 struct Status {
     qint64 time;
-    float pitch, bank, heading, vs, ias, lat, lon;
-    float flaps, fuel;
-    bool engine[8];
+    float pitch, bank, heading, vs, ias, gs, lat, lon, asl, agl;
+    float flaps, fuel, distance, completed, remaining;
+    char engine[8];
     bool gear;
     bool bea, nav, ldn, str, txi;
     float winddeg, windknots, oat;
@@ -40,11 +52,14 @@ private slots:
     void on_password_textChanged(const QString &arg1);
 
 private:
+    void event(QString desc, bool critical = 0);
+    void taxi();
     void takeoff();
     void climb();
     void cruise();
     void descend();
     void landing();
+    void deboard();
     void engineStart(int e);
     void engineStop(int e);
     void refuel();
@@ -55,14 +70,15 @@ private:
     QUdpSocket* sock;
     VA va;
     QTimer timer;
-    qint32 state; // connected, preflight, taxi-to-runway, climb, cruise, descend, taxi-to-gate, postflight, -1=offline
+    State state;
     qint32 pilot;
-    QString flight;
     qint64 startTime;
     float startLat, startLon;
-    float startFuel, maxG;
-
+    float maxG;
+    QString flight;
+    float startFuel;
     Status cur, onTakeoff, onLanding;
+    qint32 trackId, eventId;
 
     struct Mistakes {
         bool crash, beaconOff, iasLow, lightsLow, lightsHigh, overspeed, pause,
