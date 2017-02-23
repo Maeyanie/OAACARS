@@ -229,7 +229,7 @@ void MainWindow::on_endButton_clicked()
     msg["flight_duration"] = QString::number((onLanding.time-onTakeoff.time) / 3600.0, 'f', 2);
     msg["flight_fuel"] = QString::number(onTakeoff.fuel-onLanding.fuel, 'f', 0);
     msg["block_fuel"] = QString::number(startFuel-cur.fuel, 'f', 0);
-    msg["final_fuel"] = ui->fob->text();
+    msg["final_fuel"] = QString::number(cur.fuel, 'f', 0);
     msg["zfw"] = ui->zfw->text();
     msg["flight_date"] = QDateTime::currentDateTime().toString("yyyy-M-d hh:mm:ss");
 
@@ -251,9 +251,9 @@ void MainWindow::on_endButton_clicked()
     msg["landing_light_str"] = QString::number(onLanding.str);
 
     msg["log_start"] = QDateTime::fromTime_t(startTime).toString("yyyy-M-d hh:mm:ss");
-    msg["flight_start"] = QDateTime::fromTime_t(startTime).toString("yyyy-M-d hh:mm:ss");
+    msg["flight_start"] = QDateTime::fromTime_t(onTakeoff.time).toString("yyyy-M-d hh:mm:ss");
+    msg["flight_end"] = QDateTime::fromTime_t(onLanding.time).toString("yyyy-M-d hh:mm:ss");
     msg["log_end"] = QDateTime::currentDateTime().toString("yyyy-M-d hh:mm:ss");
-    msg["flight_end"] = QDateTime::currentDateTime().toString("yyyy-M-d hh:mm:ss");
 
     msg["departure_metar"] = "";
     msg["arrival_metar"] = "";
