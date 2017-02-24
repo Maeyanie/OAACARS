@@ -150,6 +150,8 @@ void MainWindow::on_startButton_clicked()
     for (int x = 0; x < 8; x++) cur.engine[x] = 0;
     mistakes.reset();
 
+    ui->tabWidget->setCurrentWidget(ui->dataTab);
+
     newEvent("FLIGHT STARTED");
 
     sendUpdate();
