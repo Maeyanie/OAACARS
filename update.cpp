@@ -8,6 +8,7 @@ void MainWindow::gotUpdate() {
     char msg[5] = "    ";
     int type;
     float val[8];
+    float prevOverspeed = 0.0, prevStall = 0.0;
 
     while (sock->hasPendingDatagrams()) {
         cur.time = time(NULL);
@@ -119,11 +120,17 @@ void MainWindow::gotUpdate() {
                 break;
 
             case 114: // annunciators: general #2
-                if (val[7] > 0.0) overspeed();
+                if (val[7] > prevOverspeed) {
+                    overspeed();
+                    prevOverspeed = val[7];
+                }
                 break;
 
             case 127: //
-                if (val[6] > 0.0) stall();
+                if (val[6] > prevStall) {
+                    stall();
+                    prevStall = val[6];
+                }
                 break;
 
             default:
