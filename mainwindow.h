@@ -76,7 +76,7 @@ private:
     float startLat, startLon;
     float maxG;
     QString flight;
-    float startFuel;
+    float startFuel, groundAGL;
     Status cur, onTakeoff, onLanding;
     qint32 trackId, eventId, critEvents;
 

@@ -136,6 +136,14 @@ void MainWindow::on_connectButton_clicked()
 
 void MainWindow::on_startButton_clicked()
 {
+    if (cur.agl > 20.0) {
+        qint32 ret = QMessageBox::warning(this, "High Ground AGL",
+                                          QString("Your AGL altitude of %1 seems a little too high. Are you sure you're on the ground?").arg(cur.agl),
+                                          QMessageBox::Yes, QMessageBox::No);
+        if (ret == QMessageBox::No) return;
+    }
+    groundAGL = cur.agl + 0.1;
+
     // 2017222102431964OPA1115
     // 2017-2-22 10:24:31.964 OPA1115
     flight = QDateTime::currentDateTime().toString("yyyyMdhhmmsszzz")+ui->flightNo->text();

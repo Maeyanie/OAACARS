@@ -81,7 +81,7 @@ void MainWindow::gotUpdate() {
                 cur.asl = val[2];
                 cur.agl = val[3];
                 if ((state < CLIMB || state > DESCEND) && val[3] > 10.0) takeoff();
-                else if (state >= CLIMB && state <= DESCEND && val[3] < 1.0) landing();
+                else if (state >= CLIMB && state <= DESCEND && val[3] < groundAGL) landing();
                 break;
 
             case 21: //        x     y     z     vX    vY    vZ   dstft dstnm
