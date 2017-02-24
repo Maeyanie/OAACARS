@@ -78,7 +78,7 @@ private:
     QString flight;
     float startFuel;
     Status cur, onTakeoff, onLanding;
-    qint32 trackId, eventId;
+    qint32 trackId, eventId, critEvents;
 
     struct Mistakes {
         bool crash, beaconOff, iasLow, lightsLow, lightsHigh, overspeed, pause,
