@@ -13,7 +13,6 @@ void MainWindow::gotUpdate() {
     float val[8];
 
     while (sock->hasPendingDatagrams()) {
-        cur.time = time(NULL);
         len = sock->readDatagram(buffer, 2048);
 
         memcpy(msg, buffer, 4);
@@ -145,6 +144,7 @@ void MainWindow::gotUpdate() {
                 switch (type) {
                 case 1: // sim/flightmodel/forces/fnrml_gear
                     if (state >= CLIMB && state <= DESCEND && val[0] > 0.0) landing();
+                    cur.time = time(NULL); // Keep this in the most-recently-added packet type.
                     break;
 
                 default:
