@@ -124,6 +124,26 @@ void MainWindow::on_startButton_clicked()
     }
     groundAGL = cur.agl;
 
+    ui->depIcao->setText(ui->depIcao->text().toUpper());
+    QPair<double,double>* point = airports.get(ui->depIcao->text());
+    if (!point) {
+        QMessageBox::critical(this, "Airport Not Found",
+                              QString("Could not find the departure airport '%1' in the database.").arg(ui->depIcao->text()),
+                              QMessageBox::Ok);
+        return;
+    }
+    dep = *point;
+
+    ui->arrIcao->setText(ui->arrIcao->text().toUpper());
+    point = airports.get(ui->arrIcao->text());
+    if (!point) {
+        QMessageBox::critical(this, "Airport Not Found",
+                              QString("Could not find the destination airport '%1' in the database.").arg(ui->arrIcao->text()),
+                              QMessageBox::Ok);
+        return;
+    }
+    arr = *point;
+
     // 2017222102431964OPA1115
     // 2017-2-22 10:24:31.964 OPA1115
     flight = QDateTime::currentDateTime().toString("yyyyMdhhmmsszzz")+ui->flightNo->text();

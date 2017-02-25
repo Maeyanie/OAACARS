@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QUdpSocket>
 #include "va.h"
+#include "airports.h"
 #include "charts.h"
 
 enum State {
@@ -22,7 +23,7 @@ struct Status {
     qint64 time;
     float realTime, flightTime, pauseTime;
     float pitch, bank, heading, vs, ias, gs, lat, lon, asl, agl, g;
-    float flaps, fuel, distance, completed, remaining;
+    float flaps, zfw, fuel, distance, completed, remaining;
     char engine[8];
     bool gear;
     bool bea, nav, ldn, str, txi;
@@ -80,6 +81,8 @@ private:
     Ui::MainWindow *ui;
     QUdpSocket* sock;
     VA va;
+    Airports airports;
+    QPair<double,double> dep, arr;
     QTimer timer, uiTimer;
     State state;
     qint32 pilot;

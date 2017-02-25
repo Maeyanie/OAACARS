@@ -17,11 +17,13 @@ SOURCES += main.cpp\
     va.cpp \
     events.cpp \
     update.cpp \
-    charts.cpp
+    charts.cpp \
+    airports.cpp
 
 HEADERS  += mainwindow.h \
     va.h \
-    charts.h
+    charts.h \
+    airports.h
 
 FORMS    += mainwindow.ui
 
