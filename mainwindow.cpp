@@ -122,7 +122,7 @@ void MainWindow::on_startButton_clicked()
                                           QMessageBox::Yes, QMessageBox::No);
         if (ret == QMessageBox::No) return;
     }
-    groundAGL = cur.agl + 0.1;
+    groundAGL = cur.agl;
 
     // 2017222102431964OPA1115
     // 2017-2-22 10:24:31.964 OPA1115
