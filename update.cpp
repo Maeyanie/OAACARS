@@ -16,7 +16,6 @@ void MainWindow::gotUpdate() {
         cur.time = time(NULL);
         len = sock->readDatagram(buffer, 2048);
 
-        //this->ui->textBrowser->append("Got packet len="+QString::number(len));
         memcpy(msg, buffer, 4);
 
         for (ptr = buffer+5; ptr < buffer+len; ptr += 36) {
@@ -41,9 +40,6 @@ void MainWindow::gotUpdate() {
                 break;
 
             case 3: // speeds: kias  keas  ktas  ktgs  ----- mph   mphas mphgs
-                ui->ias->setText(QString::number(val[0], 'f', 1)+" kn");
-                ui->gs->setText(QString::number(val[3], 'f', 0)+" kn");
-
                 cur.ias = val[0];
                 cur.gs = val[3];
 
@@ -51,8 +47,6 @@ void MainWindow::gotUpdate() {
                 break;
 
             case 4: //         mach  ----- fpm   ----- Gnorm Gaxil Gside -----
-                ui->vs->setText(QString::number(val[2], 'f', 1)+" fpm");
-
                 cur.vs = val[2];
                 if (state >= CLIMB && state <= DESCEND) {
                     if (val[2] > 200.0) {
@@ -72,7 +66,6 @@ void MainWindow::gotUpdate() {
                 break;
 
             case 13: //        telev talrn trudr fhndl fposn srtio sbhdl sbpos
-                ui->flaps->setText(QString::number(val[4]*100.0, 'f', 0)+"%");
                 cur.flaps = val[4]*100.0;
                 break;
 
@@ -87,10 +80,6 @@ void MainWindow::gotUpdate() {
                 break;
 
             case 20: //        latd  lond  altsl altgl runwy aind lats  lonw
-                ui->lat->setText(QString::number(val[0], 'f', 2)+" deg");
-                ui->lon->setText(QString::number(val[1], 'f', 2)+" deg");
-                ui->altitude->setText(QString::number(val[2], 'f', 0)+" ft");
-
                 cur.lat = val[0];
                 cur.lon = val[1];
                 cur.asl = val[2];
@@ -117,12 +106,8 @@ void MainWindow::gotUpdate() {
 
             case 63: // payload weights and CG
                 if (state <= CONNECTED) startFuel = val[2];
-
-                ui->fob->setText(QString::number(val[2], 'f', 0)+" lb");
-                ui->fu->setText(QString::number(startFuel-val[2], 'f', 0)+" lb");
-                ui->zfw->setText(QString::number(val[0]+val[1], 'f', 0)+" lb");
-
                 if (val[2] > cur.fuel + 1.0 && state > PREFLIGHT) refuel();
+                cur.zfw = val[0]+val[1];
                 cur.fuel = val[2];
                 break;
 
@@ -149,7 +134,7 @@ void MainWindow::gotUpdate() {
                 break;
 
             default:
-                //ui->textBrowser->append("Got "+QString(msg)+" with unexpected type="+QString::number(type)+" len="+QString::number(len)+", ignoring.");
+                qDebug("Got packet with unexpected type=%d len=%d, ignoring.", type, len);
                 break;
             }
         }
@@ -193,8 +178,6 @@ void MainWindow::sendUpdate() {
     track["pending_nm"] = QString::number(cur.remaining, 'f', 0);
     va.newTrack(track);
 
-
-
     QJsonObject msg;
     msg["pilotId"] = pilot;
     msg["flightId"] = flight;
@@ -227,6 +210,24 @@ void MainWindow::sendUpdate() {
     ui->statusBar->showMessage("Update sent: "+statetext, 10000);
 }
 
+#define R 3443.9185 // Earth radius in nmi
+double greatcircle(QPair<double,double> src, QPair<double,double> tgt) {
+    double lat1 = src.first * (M_PI/180.0);
+    double lon1 = src.second * (M_PI/180.0);
+    double lat2 = tgt.first * (M_PI/180.0);
+    double lon2 = tgt.second * (M_PI/180.0);
+
+    double deltalat = lat2 - lat1;
+    double deltalon = lon2 - lon1;
+
+    double a = sin(deltalat/2) * sin(deltalat/2) +
+                cos(lat1) * cos(lat2) *
+                sin(deltalon/2) * sin(deltalon/2);
+    double c = 2 * atan2(sqrt(a), sqrt(1-a));
+    return R * c;
+}
+#undef R
+
 void MainWindow::uiUpdate() {
     static bool simCon = false;
 
@@ -239,4 +240,26 @@ void MainWindow::uiUpdate() {
         // Connected
         ui->conSim->setStyleSheet("QPushButton { color: rgb(0,255,0); }");
     }
+
+
+    ui->ias->setText(QString::number(cur.gs, 'f', 1)+" kn");
+    ui->gs->setText(QString::number(cur.ias, 'f', 0)+" kn");
+    ui->vs->setText(QString::number(cur.vs, 'f', 1)+" fpm");
+
+    ui->flaps->setText(QString::number(cur.flaps*100.0, 'f', 0)+"%");
+
+    ui->lat->setText(QString::number(cur.lat, 'f', 2)+" deg");
+    ui->lon->setText(QString::number(cur.lon, 'f', 2)+" deg");
+    ui->altitude->setText(QString::number(cur.agl, 'f', 0)+" ft");
+
+    ui->fob->setText(QString::number(cur.fuel, 'f', 0)+" lb");
+    ui->fu->setText(QString::number(startFuel-cur.fuel, 'f', 0)+" lb");
+    ui->zfw->setText(QString::number(cur.zfw, 'f', 0)+" lb");
+
+
+    double distTotal = greatcircle(dep, arr);
+    double distLeft = greatcircle(QPair<double,double>(cur.lat, cur.lon), arr);
+    double done = distLeft / distTotal;
+    ui->distLeft->setText(QString::number(distLeft, 'f', 1));
+    ui->completed->setValue((1.0 - done) * 100);
 }
