@@ -265,33 +265,6 @@ void MainWindow::on_password_textChanged(const QString &arg1)
     }
 }
 
-void MainWindow::on_checkBox_toggled(bool checked)
-{
-    if (checked) {
-        altChart.show(ui->chartLayout);
-    } else {
-        altChart.hide(ui->chartLayout);
-    }
-}
-
-void MainWindow::on_checkBox_2_toggled(bool checked)
-{
-    if (checked) {
-        vsChart.show(ui->chartLayout);
-    } else {
-        vsChart.hide(ui->chartLayout);
-    }
-}
-
-void MainWindow::on_checkBox_3_toggled(bool checked)
-{
-    if (checked) {
-        gChart.show(ui->chartLayout);
-    } else {
-        gChart.hide(ui->chartLayout);
-    }
-}
-
 void MainWindow::on_conSim_clicked()
 {
     QHostAddress addr("127.0.0.1");

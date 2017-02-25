@@ -154,12 +154,6 @@ void MainWindow::gotUpdate() {
             }
         }
     }
-
-    if (!isPaused) {
-        altChart.addPoint(cur.flightTime, cur.agl);
-        vsChart.addPoint(cur.flightTime, cur.vs);
-        gChart.addPoint(cur.flightTime, cur.g);
-    }
 }
 
 void MainWindow::sendUpdate() {
@@ -245,8 +239,4 @@ void MainWindow::uiUpdate() {
         // Connected
         ui->conSim->setStyleSheet("QPushButton { color: rgb(0,255,0); }");
     }
-
-    if (ui->checkBox->isChecked()) altChart.update();
-    if (ui->checkBox_2->isChecked()) vsChart.update();
-    if (ui->checkBox_3->isChecked()) gChart.update();
 }

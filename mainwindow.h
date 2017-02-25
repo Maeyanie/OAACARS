@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QUdpSocket>
 #include "va.h"
-#include "charts.h"
 
 enum State {
     OFFLINE = -1,
@@ -53,10 +52,6 @@ private slots:
     void on_callsign_textChanged(const QString &arg1);
     void on_password_textChanged(const QString &arg1);
 
-    void on_checkBox_toggled(bool checked);
-    void on_checkBox_2_toggled(bool checked);
-    void on_checkBox_3_toggled(bool checked);
-
     void on_conSim_clicked();
 
 private:
@@ -90,7 +85,6 @@ private:
     float startFuel, groundAGL;
     Status cur, onTakeoff, onLanding;
     qint32 trackId, eventId, critEvents;
-    Charts altChart, vsChart, gChart;
 
     struct Mistakes {
         bool crash, beaconOff, iasLow, lightsLow, lightsHigh, overspeed, pause,
