@@ -4,15 +4,6 @@
 #include <QMessageBox>
 #include <QTimer>
 
-void memcat(char** ptr, const char* data, int len) {
-    memcpy(*ptr, data, len);
-    (*ptr) += len;
-}
-void memcat(char** ptr, const int data) {
-    memcpy(*ptr, &data, sizeof(data));
-    (*ptr) += sizeof(data);
-}
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -314,4 +305,6 @@ void MainWindow::on_conSim_clicked()
     memcat(&pos, "32123", 6); pos += 2;
     memcat(&pos, 1);
     sock->writeDatagram(buffer, (pos-buffer), addr, 49000);
+
+    setDRef(sock, "sim/flightmodel/forces/fnrml_gear", 1);
 }

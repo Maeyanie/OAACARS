@@ -17,126 +17,143 @@ void MainWindow::gotUpdate() {
         len = sock->readDatagram(buffer, 2048);
 
         memcpy(msg, buffer, 4);
+        if (!memcmp(msg, "DATA", 4)) {
+            for (ptr = buffer+5; ptr < buffer+len; ptr += 36) {
+                memcpy(&type, ptr, 4);
+                memcpy(val, ptr+4, 8*sizeof(float));
 
-        for (ptr = buffer+5; ptr < buffer+len; ptr += 36) {
-            memcpy(&type, ptr, 4);
-            memcpy(val, ptr+4, 8*sizeof(float));
-
-            switch (type) {
-                    //         0     1     2     3     4     5     6     7
-            case 1: // times:  real  totl  missn timer ----- zulu  local hobbs
-                if (val[0] > cur.realTime && val[1] == cur.flightTime) {
-                    cur.pauseTime += val[0] - cur.realTime;
-                    if (!isPaused) {
-                        paused();
-                        isPaused = true;
+                switch (type) {
+                        //         0     1     2     3     4     5     6     7
+                case 1: // times:  real  totl  missn timer ----- zulu  local hobbs
+                    if (val[0] > cur.realTime && val[1] == cur.flightTime) {
+                        cur.pauseTime += val[0] - cur.realTime;
+                        if (!isPaused) {
+                            paused();
+                            isPaused = true;
+                        }
+                    } else if (isPaused) {
+                        unpaused();
+                        isPaused = false;
                     }
-                } else if (isPaused) {
-                    unpaused();
-                    isPaused = false;
-                }
-                cur.realTime = val[0];
-                cur.flightTime = val[1];
-                break;
+                    cur.realTime = val[0];
+                    cur.flightTime = val[1];
+                    break;
 
-            case 3: // speeds: kias  keas  ktas  ktgs  ----- mph   mphas mphgs
-                cur.ias = val[0];
-                cur.gs = val[3];
+                case 3: // speeds: kias  keas  ktas  ktgs  ----- mph   mphas mphgs
+                    cur.ias = val[0];
+                    cur.gs = val[3];
 
-                if (state <= PREFLIGHT && cur.gs > 2.0) taxi();
-                break;
+                    if (state <= PREFLIGHT && cur.gs > 2.0) taxi();
+                    break;
 
-            case 4: //         mach  ----- fpm   ----- Gnorm Gaxil Gside -----
-                cur.vs = val[2];
-                if (state >= CLIMB && state <= DESCEND) {
-                    if (val[2] > 200.0) {
-                        if (state != CLIMB) climb();
-                    } else if (val[2] > -200.0) {
-                        if (state != CRUISE) cruise();
-                    } else {
-                        if (state != DESCEND) descend();
+                case 4: //         mach  ----- fpm   ----- Gnorm Gaxil Gside -----
+                    cur.vs = val[2];
+                    if (state >= CLIMB && state <= DESCEND) {
+                        if (val[2] > 200.0) {
+                            if (state != CLIMB) climb();
+                        } else if (val[2] > -200.0) {
+                            if (state != CRUISE) cruise();
+                        } else {
+                            if (state != DESCEND) descend();
+                        }
                     }
-                }
-                cur.g = val[4];
-                if (val[4] < 0.0) val[4] = -val[4];
-                if (val[4] < 500.0 && val[4] > maxG) {
-                    maxG = val[4];
-                    qInfo("New Max G: %f", maxG);
-                }
-                break;
-
-            case 13: //        telev talrn trudr fhndl fposn srtio sbhdl sbpos
-                cur.flaps = val[4]*100.0;
-                break;
-
-            case 14: //        gear  wbrak lbrak rbrak
-                cur.gear = val[0] > 0.5;
-                break;
-
-            case 17: //        pitch roll  hdt   hdm
-                cur.pitch = val[0];
-                cur.bank = val[1];
-                cur.heading = val[3];
-                break;
-
-            case 20: //        latd  lond  altsl altgl runwy aind lats  lonw
-                cur.lat = val[0];
-                cur.lon = val[1];
-                cur.asl = val[2];
-                cur.agl = val[3];
-                if ((state < CLIMB || state > DESCEND) && val[3] > (groundAGL + 5.0)) takeoff();
-                else if (state >= CLIMB && state <= DESCEND && val[3] < (groundAGL + 2.5)) landing();
-                break;
-
-            case 21: //        x     y     z     vX    vY    vZ   dstft dstnm
-                cur.distance = val[7];
-                break;
-
-            case 34: // engine power
-                break;
-
-            case 45: // FF
-                if (state >= PREFLIGHT) {
-                    for (int x = 0; x < 8; x++) {
-                        if ((val[x] > 0.0) && !cur.engine[x]) engineStart(x);
-                        else if ((val[x] == 0.0) && cur.engine[x]) engineStop(x);
+                    cur.g = val[4];
+                    if (val[4] < 0.0) val[4] = -val[4];
+                    if (val[4] < 500.0 && val[4] > maxG) {
+                        maxG = val[4];
+                        qInfo("New Max G: %f", maxG);
                     }
+                    break;
+
+                case 13: //        telev talrn trudr fhndl fposn srtio sbhdl sbpos
+                    cur.flaps = val[4]*100.0;
+                    break;
+
+                case 14: //        gear  wbrak lbrak rbrak
+                    cur.gear = val[0] > 0.5;
+                    break;
+
+                case 17: //        pitch roll  hdt   hdm
+                    cur.pitch = val[0];
+                    cur.bank = val[1];
+                    cur.heading = val[3];
+                    break;
+
+                case 20: //        latd  lond  altsl altgl runwy aind lats  lonw
+                    cur.lat = val[0];
+                    cur.lon = val[1];
+                    cur.asl = val[2];
+                    cur.agl = val[3];
+                    if ((state < CLIMB || state > DESCEND) && val[3] > (groundAGL + 10.0)) takeoff();
+                    break;
+
+                case 21: //        x     y     z     vX    vY    vZ   dstft dstnm
+                    cur.distance = val[7];
+                    break;
+
+                case 34: // engine power
+                    break;
+
+                case 45: // FF
+                    if (state >= PREFLIGHT) {
+                        for (int x = 0; x < 8; x++) {
+                            if ((val[x] > 0.0) && !cur.engine[x]) engineStart(x);
+                            else if ((val[x] == 0.0) && cur.engine[x]) engineStop(x);
+                        }
+                    }
+                    break;
+
+                case 63: // payload weights and CG
+                    if (state <= CONNECTED) startFuel = val[2];
+                    if (val[2] > cur.fuel + 1.0 && state > PREFLIGHT) refuel();
+                    cur.zfw = val[0]+val[1];
+                    cur.fuel = val[2];
+                    break;
+
+                case 106: // switches 1: electrical
+                    cur.nav = val[1];
+                    cur.bea = val[2];
+                    cur.str = val[3];
+                    cur.ldn = val[4];
+                    cur.txi = val[5];
+                    break;
+
+                case 114: // annunciators: general #2
+                    if (val[7] > prevOverspeed) {
+                        overspeed();
+                        prevOverspeed = val[7];
+                    }
+                    break;
+
+                case 127: //
+                    if (val[6] > prevStall) {
+                        stall();
+                        prevStall = val[6];
+                    }
+                    break;
+
+                default:
+                    qDebug("Got packet with unexpected type=%d len=%d, ignoring.", type, len);
+                    break;
                 }
-                break;
-
-            case 63: // payload weights and CG
-                if (state <= CONNECTED) startFuel = val[2];
-                if (val[2] > cur.fuel + 1.0 && state > PREFLIGHT) refuel();
-                cur.zfw = val[0]+val[1];
-                cur.fuel = val[2];
-                break;
-
-            case 106: // switches 1: electrical
-                cur.nav = val[1];
-                cur.bea = val[2];
-                cur.str = val[3];
-                cur.ldn = val[4];
-                cur.txi = val[5];
-                break;
-
-            case 114: // annunciators: general #2
-                if (val[7] > prevOverspeed) {
-                    overspeed();
-                    prevOverspeed = val[7];
-                }
-                break;
-
-            case 127: //
-                if (val[6] > prevStall) {
-                    stall();
-                    prevStall = val[6];
-                }
-                break;
-
-            default:
-                qDebug("Got packet with unexpected type=%d len=%d, ignoring.", type, len);
-                break;
             }
+        } else if (!memcmp(msg, "RREF", 4)) {
+            for (ptr = buffer+5; ptr < buffer+len; ptr += 8) {
+                memcpy(&type, ptr, 4);
+                memcpy(val, ptr+4, 4);
+
+                switch (type) {
+                case 1: // sim/flightmodel/forces/fnrml_gear
+                    if (state >= CLIMB && state <= DESCEND && val[0] > 0.0) landing();
+                    break;
+
+                default:
+                    qInfo("Unexpected RREF type %d", type);
+                    setDRef(sock, "", type, 0);
+                }
+            }
+        } else {
+            qDebug("Got unexpected message type '%4s'", msg);
         }
     }
 }

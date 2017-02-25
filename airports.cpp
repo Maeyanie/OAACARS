@@ -15,7 +15,7 @@ Airports::Airports(QObject *parent) : QObject(parent)
             icao = parts.takeFirst();
             lat = parts.takeFirst().toDouble();
             lon = parts.takeFirst().toDouble();
-            qDebug("[Airports] Loaded %s: %f,%f", icao.toUtf8().data(), lat, lon);
+            //qDebug("[Airports] Loaded %s: %f,%f", icao.toUtf8().data(), lat, lon);
             airports.insert(icao, QPair<double,double>(lat,lon));
         }
         dataFile.close();
