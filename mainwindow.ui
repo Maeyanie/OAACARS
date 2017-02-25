@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="planTab">
      <attribute name="title">
@@ -783,12 +783,61 @@
       </layout>
      </widget>
     </widget>
+    <widget class="QWidget" name="chartTab">
+     <attribute name="title">
+      <string>Charts</string>
+     </attribute>
+     <widget class="QWidget" name="verticalLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>9</x>
+        <y>9</y>
+        <width>681</width>
+        <height>401</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="chartLayout"/>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>430</y>
+        <width>681</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QCheckBox" name="checkBox">
+         <property name="text">
+          <string>Altitude</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_2">
+         <property name="text">
+          <string>VS</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_3">
+         <property name="text">
+          <string>G Force</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
    </widget>
    <widget class="QLabel" name="label_15">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>510</y>
+      <y>520</y>
       <width>71</width>
       <height>20</height>
      </rect>
@@ -804,7 +853,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>540</y>
+      <y>550</y>
       <width>71</width>
       <height>20</height>
      </rect>
@@ -820,7 +869,7 @@
     <property name="geometry">
      <rect>
       <x>86</x>
-      <y>510</y>
+      <y>520</y>
       <width>131</width>
       <height>20</height>
      </rect>
@@ -830,7 +879,7 @@
     <property name="geometry">
      <rect>
       <x>86</x>
-      <y>540</y>
+      <y>550</y>
       <width>131</width>
       <height>20</height>
      </rect>
@@ -839,14 +888,17 @@
    <widget class="QPushButton" name="connectButton">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>570</y>
+      <x>260</x>
+      <y>510</y>
       <width>91</width>
       <height>31</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton { color: rgb(255,0,0); }</string>
+    </property>
     <property name="text">
-     <string>Connect</string>
+     <string>Connect VAM</string>
     </property>
    </widget>
    <widget class="QPushButton" name="startButton">
@@ -855,7 +907,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>290</x>
+      <x>390</x>
       <y>510</y>
       <width>91</width>
       <height>31</height>
@@ -871,7 +923,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>290</x>
+      <x>390</x>
       <y>550</y>
       <width>91</width>
       <height>31</height>
@@ -879,6 +931,22 @@
     </property>
     <property name="text">
      <string>End Flight</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="conSim">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>550</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton { color: rgb(255,0,0); }</string>
+    </property>
+    <property name="text">
+     <string>Connect SIM</string>
     </property>
    </widget>
   </widget>
@@ -889,6 +957,60 @@
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>aircraft</tabstop>
+  <tabstop>acIcao</tabstop>
+  <tabstop>depIcao</tabstop>
+  <tabstop>arrIcao</tabstop>
+  <tabstop>tailNumber</tabstop>
+  <tabstop>flightType</tabstop>
+  <tabstop>depTime</tabstop>
+  <tabstop>cruiseSpeed</tabstop>
+  <tabstop>cruiseAlt</tabstop>
+  <tabstop>pax</tabstop>
+  <tabstop>cargo</tabstop>
+  <tabstop>eet</tabstop>
+  <tabstop>endurance</tabstop>
+  <tabstop>alt1</tabstop>
+  <tabstop>alt2</tabstop>
+  <tabstop>flightNo</tabstop>
+  <tabstop>route</tabstop>
+  <tabstop>remarks</tabstop>
+  <tabstop>ias</tabstop>
+  <tabstop>gs</tabstop>
+  <tabstop>distLeft</tabstop>
+  <tabstop>altitude</tabstop>
+  <tabstop>lat</tabstop>
+  <tabstop>vs</tabstop>
+  <tabstop>lon</tabstop>
+  <tabstop>flaps</tabstop>
+  <tabstop>fob</tabstop>
+  <tabstop>fu</tabstop>
+  <tabstop>zfw</tabstop>
+  <tabstop>flightEvents</tabstop>
+  <tabstop>critEvents</tabstop>
+  <tabstop>callsign</tabstop>
+  <tabstop>password</tabstop>
+  <tabstop>connectButton</tabstop>
+  <tabstop>startButton</tabstop>
+  <tabstop>endButton</tabstop>
+  <tabstop>fsDepIcao</tabstop>
+  <tabstop>fsArrIcao</tabstop>
+  <tabstop>fsDistance</tabstop>
+  <tabstop>fsZFW</tabstop>
+  <tabstop>fsCritEvents</tabstop>
+  <tabstop>fsDuration</tabstop>
+  <tabstop>fsBFuel</tabstop>
+  <tabstop>fsFFuel</tabstop>
+  <tabstop>fsVS</tabstop>
+  <tabstop>fsG</tabstop>
+  <tabstop>fsPitch</tabstop>
+  <tabstop>fsIAS</tabstop>
+  <tabstop>fsBank</tabstop>
+  <tabstop>fsFlaps</tabstop>
+  <tabstop>fsComments</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

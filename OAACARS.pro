@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       += core gui network charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,10 +16,12 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     va.cpp \
     events.cpp \
-    update.cpp
+    update.cpp \
+    charts.cpp
 
 HEADERS  += mainwindow.h \
-    va.h
+    va.h \
+    charts.h
 
 FORMS    += mainwindow.ui
 

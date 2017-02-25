@@ -2,13 +2,15 @@
 #include "ui_mainwindow.h"
 
 void MainWindow::gotUpdate() {
+    static float prevOverspeed = 0.0, prevStall = 0.0;
+    static bool isPaused = false;
+
     qint32 len;
     char buffer[2048]; // I think the max UDP datagram size is 924 or so, so this should be plenty.
     char* ptr;
     char msg[5] = "    ";
     int type;
     float val[8];
-    float prevOverspeed = 0.0, prevStall = 0.0;
 
     while (sock->hasPendingDatagrams()) {
         cur.time = time(NULL);
@@ -24,7 +26,18 @@ void MainWindow::gotUpdate() {
             switch (type) {
                     //         0     1     2     3     4     5     6     7
             case 1: // times:  real  totl  missn timer ----- zulu  local hobbs
-                // TODO: Handle time compression here.
+                if (val[0] > cur.realTime && val[1] == cur.flightTime) {
+                    cur.pauseTime += val[0] - cur.realTime;
+                    if (!isPaused) {
+                        paused();
+                        isPaused = true;
+                    }
+                } else if (isPaused) {
+                    unpaused();
+                    isPaused = false;
+                }
+                cur.realTime = val[0];
+                cur.flightTime = val[1];
                 break;
 
             case 3: // speeds: kias  keas  ktas  ktgs  ----- mph   mphas mphgs
@@ -37,7 +50,7 @@ void MainWindow::gotUpdate() {
                 if (state <= PREFLIGHT && cur.gs > 2.0) taxi();
                 break;
 
-            case 4: //         mach  ----- fpm   Gnorm Gaxil Gside ----- -----
+            case 4: //         mach  ----- fpm   ----- Gnorm Gaxil Gside -----
                 ui->vs->setText(QString::number(val[2], 'f', 1)+" fpm");
 
                 cur.vs = val[2];
@@ -50,9 +63,11 @@ void MainWindow::gotUpdate() {
                         if (state != DESCEND) descend();
                     }
                 }
-                if (fabs(val[3]) < 500 && fabs(val[3]) > maxG) {
-                    maxG = fabs(val[3]);
-                    ui->flightEvents->append("New Max G: "+QString::number(maxG, 'f', 1));
+                cur.g = val[4];
+                if (val[4] < 0.0) val[4] = -val[4];
+                if (val[4] < 500.0 && val[4] > maxG) {
+                    maxG = val[4];
+                    qInfo("New Max G: %f", maxG);
                 }
                 break;
 
@@ -107,7 +122,7 @@ void MainWindow::gotUpdate() {
                 ui->fu->setText(QString::number(startFuel-val[2], 'f', 0)+" lb");
                 ui->zfw->setText(QString::number(val[0]+val[1], 'f', 0)+" lb");
 
-                if (val[2] > cur.fuel + 0.1 && state > PREFLIGHT) refuel();
+                if (val[2] > cur.fuel + 1.0 && state > PREFLIGHT) refuel();
                 cur.fuel = val[2];
                 break;
 
@@ -138,6 +153,12 @@ void MainWindow::gotUpdate() {
                 break;
             }
         }
+    }
+
+    if (!isPaused) {
+        altChart.addPoint(cur.flightTime, cur.agl);
+        vsChart.addPoint(cur.flightTime, cur.vs);
+        gChart.addPoint(cur.flightTime, cur.g);
     }
 }
 
@@ -210,4 +231,22 @@ void MainWindow::sendUpdate() {
 
     ui->statusBar->clearMessage();
     ui->statusBar->showMessage("Update sent: "+statetext, 10000);
+}
+
+void MainWindow::uiUpdate() {
+    static bool simCon = false;
+
+    qint64 tnow = time(NULL);
+
+    if (cur.time < tnow - 5 && simCon) {
+        // Disconnected
+        ui->conSim->setStyleSheet("QPushButton { color: rgb(255,0,0); }");
+    } else if (cur.time >= tnow - 5 && !simCon) {
+        // Connected
+        ui->conSim->setStyleSheet("QPushButton { color: rgb(0,255,0); }");
+    }
+
+    if (ui->checkBox->isChecked()) altChart.update();
+    if (ui->checkBox_2->isChecked()) vsChart.update();
+    if (ui->checkBox_3->isChecked()) gChart.update();
 }

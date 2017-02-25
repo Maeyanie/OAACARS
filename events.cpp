@@ -128,3 +128,11 @@ void MainWindow::stall() {
 
     mistakes.stall = 1;
 }
+
+void MainWindow::paused() {
+    newEvent("PAUSED", true);
+    mistakes.pause = 1;
+}
+void MainWindow::unpaused() {
+    newEvent("UNPAUSED", true);
+}

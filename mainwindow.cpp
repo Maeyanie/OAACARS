@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(sendUpdate()));
+    connect(&uiTimer, SIGNAL(timeout()), this, SLOT(uiUpdate()));
 
     sock = new QUdpSocket(this);
     if (!sock->bind(32123)) {
@@ -38,39 +39,12 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     connect(sock, SIGNAL(readyRead()), this, SLOT(gotUpdate()));
 
-    QHostAddress addr("127.0.0.1");
-    char buffer[1024];
-    char* pos = buffer;
-    memcat(&pos, "DSEL", 5);
-    memcat(&pos, 1); // times
-    memcat(&pos, 3); // speeds
-    memcat(&pos, 4); // Mach, VVI, G-load
-    memcat(&pos, 13);// trim/flap/slat/s-brakes
-    memcat(&pos, 14);// gear/brakes
-    memcat(&pos, 17);// pitch, roll, headings
-    memcat(&pos, 20);// lat, lon, altitude
-    memcat(&pos, 21);// loc, vel, dist traveled
-    memcat(&pos, 45); // FF
-    memcat(&pos, 63);// payload weights and CG
-    memcat(&pos, 106); // switches 1: electrical
-    memcat(&pos, 114); // annunciators: general #2
-    memcat(&pos, 127); // warning status
-    sock->writeDatagram(buffer, (pos-buffer), addr, 49000);
-
-    memset(buffer, 0, 1024);
-    pos = buffer;
-    memcat(&pos, "ISET", 5);
-    memcat(&pos, 64);
-    memcat(&pos, "127.000.000.001", 16);
-    memcat(&pos, "32123", 6); pos += 2;
-    memcat(&pos, 1);
-    sock->writeDatagram(buffer, (pos-buffer), addr, 49000);
-
     state = OFFLINE;
     startFuel = 0.0f;
     maxG = 0.0f;
     memset(&cur, 0, sizeof(cur));
     onTakeoff = onLanding = cur;
+    uiTimer.start(1000);
 }
 
 MainWindow::~MainWindow()
@@ -90,6 +64,7 @@ void MainWindow::on_connectButton_clicked()
     QString ret = va.login(ui->callsign->text(), ui->password->text());
     if (ret == "FAIL") {
         QMessageBox::warning(this, "Warning", "Login failed.", QMessageBox::Ok);
+        ui->connectButton->setStyleSheet("QPushButton { color: rgb(255,0,0); }");
         return;
     }
 
@@ -109,6 +84,11 @@ void MainWindow::on_connectButton_clicked()
     QJsonValue jv = ja.first();
     QJsonObject data = jv.toObject();
     pilot = data["id"].toString().toInt();
+    if (pilot == 0) {
+        ui->connectButton->setStyleSheet("QPushButton { color: rgb(255,0,0); }");
+        return;
+    }
+    ui->connectButton->setStyleSheet("QPushButton { color: rgb(0,255,0); }");
 
     if (data.find("departure") != data.end() && data["departure"] != "") {
         int yn = QMessageBox::question(this, "Flight Plan", "A flight plan was found. Load it?", QMessageBox::Yes, QMessageBox::No);
@@ -283,4 +263,62 @@ void MainWindow::on_password_textChanged(const QString &arg1)
         out << ui->callsign->text() << endl << ui->password->text() << endl;
         loginFile.close();
     }
+}
+
+void MainWindow::on_checkBox_toggled(bool checked)
+{
+    if (checked) {
+        altChart.show(ui->chartLayout);
+    } else {
+        altChart.hide(ui->chartLayout);
+    }
+}
+
+void MainWindow::on_checkBox_2_toggled(bool checked)
+{
+    if (checked) {
+        vsChart.show(ui->chartLayout);
+    } else {
+        vsChart.hide(ui->chartLayout);
+    }
+}
+
+void MainWindow::on_checkBox_3_toggled(bool checked)
+{
+    if (checked) {
+        gChart.show(ui->chartLayout);
+    } else {
+        gChart.hide(ui->chartLayout);
+    }
+}
+
+void MainWindow::on_conSim_clicked()
+{
+    QHostAddress addr("127.0.0.1");
+    char buffer[1024];
+    char* pos = buffer;
+    memcat(&pos, "DSEL", 5);
+    memcat(&pos, 1); // times
+    memcat(&pos, 3); // speeds
+    memcat(&pos, 4); // Mach, VVI, G-load
+    memcat(&pos, 13);// trim/flap/slat/s-brakes
+    memcat(&pos, 14);// gear/brakes
+    memcat(&pos, 17);// pitch, roll, headings
+    memcat(&pos, 20);// lat, lon, altitude
+    memcat(&pos, 21);// loc, vel, dist traveled
+    memcat(&pos, 45); // FF
+    memcat(&pos, 63);// payload weights and CG
+    memcat(&pos, 106); // switches 1: electrical
+    memcat(&pos, 114); // annunciators: general #2
+    memcat(&pos, 127); // warning status
+    sock->writeDatagram(buffer, (pos-buffer), addr, 49000);
+
+    memset(buffer, 0, 1024);
+    pos = buffer;
+    memcat(&pos, "ISET", 5);
+    memcat(&pos, 64);
+    memcat(&pos, "127.000.000.001", 16);
+    memcat(&pos, "32123", 6); pos += 2;
+    memcat(&pos, 1);
+    sock->writeDatagram(buffer, (pos-buffer), addr, 49000);
 }

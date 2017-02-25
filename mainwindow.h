@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QUdpSocket>
 #include "va.h"
+#include "charts.h"
 
 enum State {
     OFFLINE = -1,
@@ -19,7 +20,8 @@ enum State {
 
 struct Status {
     qint64 time;
-    float pitch, bank, heading, vs, ias, gs, lat, lon, asl, agl;
+    float realTime, flightTime, pauseTime;
+    float pitch, bank, heading, vs, ias, gs, lat, lon, asl, agl, g;
     float flaps, fuel, distance, completed, remaining;
     char engine[8];
     bool gear;
@@ -42,16 +44,23 @@ public:
 private slots:
     void gotUpdate();
     void sendUpdate();
+    void uiUpdate();
 
     void on_connectButton_clicked();
     void on_startButton_clicked();
-
     void on_endButton_clicked();
 
     void on_callsign_textChanged(const QString &arg1);
     void on_password_textChanged(const QString &arg1);
 
+    void on_checkBox_toggled(bool checked);
+    void on_checkBox_2_toggled(bool checked);
+    void on_checkBox_3_toggled(bool checked);
+
+    void on_conSim_clicked();
+
 private:
+    void connectToSim();
     void newEvent(QString desc, bool critical = 0);
     void taxi();
     void takeoff();
@@ -65,11 +74,13 @@ private:
     void refuel();
     void overspeed();
     void stall();
+    void paused();
+    void unpaused();
 
     Ui::MainWindow *ui;
     QUdpSocket* sock;
     VA va;
-    QTimer timer;
+    QTimer timer, uiTimer;
     State state;
     qint32 pilot;
     qint64 startTime;
@@ -79,6 +90,7 @@ private:
     float startFuel, groundAGL;
     Status cur, onTakeoff, onLanding;
     qint32 trackId, eventId, critEvents;
+    Charts altChart, vsChart, gChart;
 
     struct Mistakes {
         bool crash, beaconOff, iasLow, lightsLow, lightsHigh, overspeed, pause,
