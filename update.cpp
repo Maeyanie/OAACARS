@@ -153,7 +153,7 @@ void MainWindow::gotUpdate() {
 
                 default:
                     qInfo("Unexpected RREF type %d", type);
-                    setDRef(sock, "", type, 0);
+                    sendDRef(sock, "", type, 0);
                 }
             }
         } else {
@@ -256,10 +256,18 @@ void MainWindow::uiUpdate() {
 
     if (cur.time < tnow - 5 && simCon) {
         // Disconnected
-        ui->conSim->setStyleSheet("QPushButton { color: rgb(255,0,0); }");
-    } else if (cur.time >= tnow - 5 && !simCon) {
+        if (simCon) {
+            ui->conSim->setStyleSheet("QPushButton { color: rgb(255,0,0); }");
+            simCon = 0;
+        }
+        setDRef(sock, "oaacars/connected", 0);
+    } else if (cur.time >= tnow - 5) {
         // Connected
-        ui->conSim->setStyleSheet("QPushButton { color: rgb(0,255,0); }");
+        if (!simCon) {
+            ui->conSim->setStyleSheet("QPushButton { color: rgb(0,255,0); }");
+            simCon = 1;
+        }
+        setDRef(sock, "oaacars/connected", tnow);
     }
 
 
@@ -281,6 +289,8 @@ void MainWindow::uiUpdate() {
     double distTotal = greatcircle(dep, arr);
     double distLeft = greatcircle(QPair<double,double>(cur.lat, cur.lon), arr);
     double done = distLeft / distTotal;
+    cur.remaining = distLeft;
+    cur.completed = (1.0 - done) * 100;
     ui->distLeft->setText(QString::number(distLeft, 'f', 1));
-    ui->completed->setValue((1.0 - done) * 100);
+    ui->completed->setValue(cur.completed);
 }

@@ -152,6 +152,7 @@ void MainWindow::on_startButton_clicked()
     ui->tabWidget->setCurrentWidget(ui->dataTab);
 
     newEvent("FLIGHT STARTED");
+    setDRef(sock, "oaacars/tracking", 1);
 
     sendUpdate();
     timer.start(60000);
@@ -250,6 +251,7 @@ void MainWindow::on_endButton_clicked()
     va.sendEvents();
     va.sendTracks();
 
+    setDRef(sock, "oaacars/tracking", 0);
     state = OFFLINE;
     ui->endButton->setEnabled(false);
     ui->statusBar->clearMessage();
@@ -306,5 +308,5 @@ void MainWindow::on_conSim_clicked()
     memcat(&pos, 1);
     sock->writeDatagram(buffer, (pos-buffer), addr, 49000);
 
-    setDRef(sock, "sim/flightmodel/forces/fnrml_gear", 1);
+    sendDRef(sock, "sim/flightmodel/forces/fnrml_gear", 1);
 }
