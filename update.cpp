@@ -84,6 +84,10 @@ void MainWindow::gotUpdate() {
                     cur.asl = val[2];
                     cur.agl = val[3];
                     if ((state < CLIMB || state > DESCEND) && val[3] > (groundAGL + 10.0)) takeoff();
+                    if (state >= CLIMB && state <= DESCEND && val[3] < groundAGL + 5 && cur.gs < 25) {
+                        newEvent("Fallback landing triggered.", true);
+                        landing();
+                    }
                     break;
 
                 case 21: //        x     y     z     vX    vY    vZ   dstft dstnm
