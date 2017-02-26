@@ -273,7 +273,7 @@ void MainWindow::uiUpdate() {
             ui->conSim->setStyleSheet("QPushButton { color: rgb(0,255,0); }");
             simCon = 1;
         }
-        setDRef(sock, "oaacars/connected", tnow);
+        setDRef(sock, "oaacars/connected", cur.realTime);
     }
 
 
