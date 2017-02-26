@@ -111,6 +111,7 @@ private:
 void memcat(char** ptr, const char* data, int len);
 void memcat(char** ptr, const char* data);
 void memcat(char** ptr, const int data);
-void setDRef(QUdpSocket* sock, const char *name, qint32 id, qint32 freq = 20);
+void sendDRef(QUdpSocket* sock, const char *name, qint32 id, qint32 freq = 20);
+void setDRef(QUdpSocket* sock, const char* name, float val);
 
 #endif // MAINWINDOW_H
