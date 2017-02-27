@@ -900,6 +900,25 @@
      <string>Connect SIM</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="applyWeight">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>520</y>
+      <width>141</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Apply passenger and cargo weight to plane when Start Flight is clicked.</string>
+    </property>
+    <property name="text">
+     <string>Apply Weight</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="sizeGripEnabled">
