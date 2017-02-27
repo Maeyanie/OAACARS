@@ -12,13 +12,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->password->setEchoMode(QLineEdit::Password);
 
+    QSettings settings("OAAE", "OAACARS", this);
     QFile loginFile("login.txt");
-    if (loginFile.open(QFile::ReadOnly)) {
+    if (loginFile.exists() && loginFile.open(QFile::ReadOnly)) {
         QTextStream in(&loginFile);
-        ui->callsign->setText(in.readLine().trimmed());
-        ui->password->setText(in.readLine().trimmed());
-        loginFile.close();
+        settings.setValue("callsign", in.readLine().trimmed());
+        settings.setValue("password", in.readLine().trimmed());
+        loginFile.remove();
     }
+    ui->callsign->setText(settings.value("callsign").toString());
+    ui->password->setText(settings.value("password").toString());
+    ui->applyWeight->setChecked(settings.value("applyWeight", true).toBool());
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(sendUpdate()));
     connect(&uiTimer, SIGNAL(timeout()), this, SLOT(uiUpdate()));
@@ -134,6 +138,11 @@ void MainWindow::on_startButton_clicked()
         return;
     }
     arr = *point;
+
+    if (ui->applyWeight->isChecked()) {
+        float totalWeight = ui->pax->text().toFloat() * 80.0 + ui->cargo->text().toFloat();
+        setDRef(sock, "sim/flightmodel/weight/m_fixed", totalWeight);
+    }
 
     // 2017222102431964OPA1115
     // 2017-2-22 10:24:31.964 OPA1115
@@ -260,22 +269,20 @@ void MainWindow::on_endButton_clicked()
 
 void MainWindow::on_callsign_textChanged(const QString &arg1)
 {
-    QFile loginFile("login.txt");
-    if (loginFile.open(QFile::WriteOnly | QFile::Truncate)) {
-        QTextStream out(&loginFile);
-        out << ui->callsign->text() << endl << ui->password->text() << endl;
-        loginFile.close();
-    }
+    QSettings settings("OAAE", "OAACARS", this);
+    settings.setValue("callsign", arg1);
 }
 
 void MainWindow::on_password_textChanged(const QString &arg1)
 {
-    QFile loginFile("login.txt");
-    if (loginFile.open(QFile::WriteOnly | QFile::Truncate)) {
-        QTextStream out(&loginFile);
-        out << ui->callsign->text() << endl << ui->password->text() << endl;
-        loginFile.close();
-    }
+    QSettings settings("OAAE", "OAACARS", this);
+    settings.setValue("password", arg1);
+}
+
+void MainWindow::on_applyWeight_stateChanged(int arg1)
+{
+    QSettings settings("OAAE", "OAACARS", this);
+    settings.setValue("applyWeight", arg1);
 }
 
 void MainWindow::on_checkBox_toggled(bool checked)

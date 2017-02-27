@@ -60,6 +60,8 @@ private slots:
 
     void on_conSim_clicked();
 
+    void on_applyWeight_stateChanged(int arg1);
+
 private:
     void connectToSim();
     void newEvent(QString desc, bool critical = 0);
