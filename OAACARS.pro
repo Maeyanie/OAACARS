@@ -26,7 +26,9 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 DISTFILES += \
-    notes.txt
+    notes.txt \
+    airports.sh \
+    airports.csv
 
 LIBS += -L$$PWD -lcurl
 
