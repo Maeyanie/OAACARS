@@ -105,9 +105,9 @@ void MainWindow::engineStop(int e) {
     }
 }
 
-void MainWindow::refuel() {
+void MainWindow::refuel(float prev, float cur) {
     static qint64 last = 0;
-    if (last < time(NULL) - 10) newEvent("REFUEL", true);
+    if (last < time(NULL) - 10) newEvent(QString("REFUEL: %1 -> %2 (%3)").arg(prev, cur, cur-prev), true);
     last = time(NULL);
 
     mistakes.refuel = 1;

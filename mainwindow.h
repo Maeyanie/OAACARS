@@ -69,7 +69,7 @@ private:
     void deboard();
     void engineStart(int e);
     void engineStop(int e);
-    void refuel();
+    void refuel(float prev, float cur);
     void overspeed();
     void stall();
     void paused();
