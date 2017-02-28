@@ -108,7 +108,7 @@ void MainWindow::gotUpdate() {
 
                 case 63: // payload weights and CG
                     if (state <= CONNECTED) startFuel = val[2];
-                    if (val[2] > cur.fuel + 1.0 && state > PREFLIGHT) refuel();
+                    if (val[2] > cur.fuel + 1.0 && state > PREFLIGHT) refuel(cur.fuel, val[2]);
                     cur.zfw = val[0]+val[1];
                     cur.fuel = val[2];
                     break;
@@ -277,8 +277,8 @@ void MainWindow::uiUpdate() {
     }
 
 
-    ui->ias->setText(QString::number(cur.gs, 'f', 1)+" kn");
-    ui->gs->setText(QString::number(cur.ias, 'f', 0)+" kn");
+    ui->ias->setText(QString::number(cur.ias, 'f', 1)+" kn");
+    ui->gs->setText(QString::number(cur.gs, 'f', 0)+" kn");
     ui->vs->setText(QString::number(cur.vs, 'f', 1)+" fpm");
 
     ui->flaps->setText(QString::number(cur.flaps*100.0, 'f', 0)+"%");
