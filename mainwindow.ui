@@ -7,977 +7,998 @@
     <x>0</x>
     <y>0</y>
     <width>700</width>
-    <height>625</height>
+    <height>621</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>700</width>
+    <height>621</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>OAACARS</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QTabWidget" name="tabWidget">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>701</width>
-      <height>491</height>
-     </rect>
-    </property>
-    <property name="currentIndex">
-     <number>0</number>
-    </property>
-    <widget class="QWidget" name="planTab">
-     <attribute name="title">
-      <string>Flight Plan</string>
-     </attribute>
-     <widget class="QWidget" name="gridLayoutWidget_2">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>671</width>
-        <height>151</height>
-       </rect>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="3" column="2">
-        <widget class="QLineEdit" name="cruiseSpeed"/>
-       </item>
-       <item row="0" column="4">
-        <widget class="QLabel" name="label_19">
-         <property name="text">
-          <string>Tail Number</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="5">
-        <widget class="QLabel" name="label_20">
-         <property name="text">
-          <string>Type of Flight</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="4">
-        <widget class="QLineEdit" name="tailNumber"/>
-       </item>
-       <item row="1" column="5">
-        <widget class="QComboBox" name="flightType">
-         <item>
-          <property name="text">
-           <string>IFR</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>VFR</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="3" column="4">
-        <widget class="QLineEdit" name="pax"/>
-       </item>
-       <item row="3" column="3">
-        <widget class="QLineEdit" name="cruiseAlt"/>
-       </item>
-       <item row="3" column="5">
-        <widget class="QLineEdit" name="cargo"/>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_25">
-         <property name="text">
-          <string>Arrival ICAO</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QLabel" name="label_28">
-         <property name="text">
-          <string>Total EET</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="3">
-        <widget class="QLabel" name="label_30">
-         <property name="text">
-          <string>Alternative 1</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="2">
-        <widget class="QLabel" name="label_29">
-         <property name="text">
-          <string>Endurance</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="5">
-        <widget class="QLabel" name="label_32">
-         <property name="text">
-          <string>Flight Number</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="4">
-        <widget class="QLabel" name="label_31">
-         <property name="text">
-          <string>Alternative 2</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="3">
-        <widget class="QLineEdit" name="aircraft">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QLabel" name="label_23">
-         <property name="text">
-          <string>Cruise Speed</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLabel" name="label_22">
-         <property name="text">
-          <string>Departure Time</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="3">
-        <widget class="QLabel" name="label_24">
-         <property name="text">
-          <string>FL/Altitude</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="4">
-        <widget class="QLabel" name="label_26">
-         <property name="text">
-          <string>Passengers</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="depTime"/>
-       </item>
-       <item row="2" column="5">
-        <widget class="QLabel" name="label_27">
-         <property name="text">
-          <string>Cargo</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_21">
-         <property name="text">
-          <string>Departure ICAO</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLineEdit" name="depIcao"/>
-       </item>
-       <item row="0" column="3">
-        <widget class="QLabel" name="label_18">
-         <property name="text">
-          <string>Aircraft ICAO</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="3">
-        <widget class="QLineEdit" name="acIcao"/>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_17">
-         <property name="text">
-          <string>Aircraft</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLineEdit" name="arrIcao"/>
-       </item>
-       <item row="5" column="1">
-        <widget class="QLineEdit" name="eet"/>
-       </item>
-       <item row="5" column="2">
-        <widget class="QLineEdit" name="endurance"/>
-       </item>
-       <item row="5" column="3">
-        <widget class="QLineEdit" name="alt1"/>
-       </item>
-       <item row="5" column="4">
-        <widget class="QLineEdit" name="alt2"/>
-       </item>
-       <item row="5" column="5">
-        <widget class="QLineEdit" name="flightNo"/>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QLabel" name="label_33">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>170</y>
-        <width>47</width>
-        <height>13</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Route</string>
-      </property>
-     </widget>
-     <widget class="QPlainTextEdit" name="route">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>190</y>
-        <width>661</width>
-        <height>111</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_34">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>320</y>
-        <width>211</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Other Information / Remarks</string>
-      </property>
-     </widget>
-     <widget class="QPlainTextEdit" name="remarks">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>340</y>
-        <width>661</width>
-        <height>111</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="dataTab">
-     <attribute name="title">
-      <string>Flight Data</string>
-     </attribute>
-     <widget class="QWidget" name="verticalLayoutWidget">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>671</width>
-        <height>441</height>
-       </rect>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <layout class="QGridLayout" name="gridLayout">
-         <property name="sizeConstraint">
-          <enum>QLayout::SetDefaultConstraint</enum>
-         </property>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>Altitude</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>IAS</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>VS</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="label_4">
-           <property name="text">
-            <string>FOB</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QLabel" name="label_5">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>GS</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QLabel" name="label_6">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Latitude</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2">
-          <widget class="QLabel" name="label_7">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Longitude</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="2">
-          <widget class="QLabel" name="label_8">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Fuel Used</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="4">
-          <widget class="QLabel" name="label_9">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>NM To Arrival</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="4">
-          <widget class="QLabel" name="label_12">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>ZFW</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="4">
-          <widget class="QLabel" name="label_11">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Flaps</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="4">
-          <widget class="QLabel" name="label_10">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Completed %</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="ias"/>
-         </item>
-         <item row="0" column="3">
-          <widget class="QLineEdit" name="gs"/>
-         </item>
-         <item row="0" column="5">
-          <widget class="QLineEdit" name="distLeft"/>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="altitude"/>
-         </item>
-         <item row="2" column="3">
-          <widget class="QLineEdit" name="lat"/>
-         </item>
-         <item row="2" column="5">
-          <widget class="QProgressBar" name="completed">
-           <property name="value">
-            <number>0</number>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLineEdit" name="vs"/>
-         </item>
-         <item row="3" column="3">
-          <widget class="QLineEdit" name="lon"/>
-         </item>
-         <item row="3" column="5">
-          <widget class="QLineEdit" name="flaps"/>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLineEdit" name="fob"/>
-         </item>
-         <item row="4" column="3">
-          <widget class="QLineEdit" name="fu"/>
-         </item>
-         <item row="4" column="5">
-          <widget class="QLineEdit" name="zfw"/>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_13">
-         <property name="text">
-          <string>Flight Events</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QTextEdit" name="flightEvents">
-         <property name="verticalScrollBarPolicy">
-          <enum>Qt::ScrollBarAlwaysOn</enum>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_14">
-         <property name="text">
-          <string>Critical Events</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QTextEdit" name="critEvents">
-         <property name="verticalScrollBarPolicy">
-          <enum>Qt::ScrollBarAlwaysOn</enum>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="summaryTab">
-     <attribute name="title">
-      <string>Flight Summary</string>
-     </attribute>
-     <widget class="QWidget" name="gridLayoutWidget">
-      <property name="geometry">
-       <rect>
-        <x>9</x>
-        <y>9</y>
-        <width>681</width>
-        <height>451</height>
-       </rect>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="fsDepIcao">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_35">
-         <property name="text">
-          <string>Departure ICAO</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_36">
-         <property name="text">
-          <string>Arrival ICAO</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="fsArrIcao">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QLineEdit" name="fsPitch">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="fsZFW">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QLabel" name="label_39">
-         <property name="text">
-          <string>Critical Events</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="3">
-        <widget class="QLineEdit" name="fsFlaps">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="2">
-        <widget class="QLabel" name="label_47">
-         <property name="text">
-          <string>Landing IAS</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="3">
-        <widget class="QLineEdit" name="fsBank">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="3">
-        <widget class="QLineEdit" name="fsIAS">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0" colspan="4">
-        <widget class="QLabel" name="label_43">
-         <property name="text">
-          <string>Landing Analysis</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QLineEdit" name="fsVS">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="label_45">
-         <property name="text">
-          <string>Landing Force G</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="QLineEdit" name="fsG">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="label_46">
-         <property name="text">
-          <string>Landing Pitch</string>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="0" colspan="4">
-        <widget class="QLabel" name="label_50">
-         <property name="text">
-          <string>Pilot Comments</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_51">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="0" colspan="4">
-        <widget class="QPlainTextEdit" name="fsComments"/>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_38">
-         <property name="text">
-          <string>ZFW</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLineEdit" name="fsDistance">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_37">
-         <property name="text">
-          <string>Distance</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="2">
-        <widget class="QLabel" name="label_42">
-         <property name="text">
-          <string>Flight Fuel</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="3">
-        <widget class="QLineEdit" name="fsCritEvents">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QLabel" name="label_41">
-         <property name="text">
-          <string>Block Fuel</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="3">
-        <widget class="QLineEdit" name="fsDuration">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="3">
-        <widget class="QLineEdit" name="fsFFuel">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="3">
-        <widget class="QLineEdit" name="fsBFuel">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="label_44">
-         <property name="text">
-          <string>Landing VS</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QLabel" name="label_40">
-         <property name="text">
-          <string>Flight Duration</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="2">
-        <widget class="QLabel" name="label_49">
-         <property name="text">
-          <string>Landing Flaps</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="2">
-        <widget class="QLabel" name="label_48">
-         <property name="text">
-          <string>Landing Bank</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="label_52">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="chartTab">
-     <attribute name="title">
-      <string>Charts</string>
-     </attribute>
-     <widget class="QWidget" name="verticalLayoutWidget_2">
-      <property name="geometry">
-       <rect>
-        <x>9</x>
-        <y>9</y>
-        <width>681</width>
-        <height>401</height>
-       </rect>
-      </property>
-      <layout class="QVBoxLayout" name="chartLayout"/>
-     </widget>
-     <widget class="QWidget" name="horizontalLayoutWidget">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>430</y>
-        <width>681</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QCheckBox" name="checkBox">
-         <property name="text">
-          <string>Altitude</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_2">
-         <property name="text">
-          <string>VS</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_3">
-         <property name="text">
-          <string>G Force</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
-   </widget>
-   <widget class="QLabel" name="label_15">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>520</y>
-      <width>71</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Callsign</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_16">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>550</y>
-      <width>71</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Password</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="callsign">
-    <property name="geometry">
-     <rect>
-      <x>86</x>
-      <y>520</y>
-      <width>131</width>
-      <height>20</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="password">
-    <property name="geometry">
-     <rect>
-      <x>86</x>
-      <y>550</y>
-      <width>131</width>
-      <height>20</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="connectButton">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>510</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton { color: rgb(255,0,0); }</string>
-    </property>
-    <property name="text">
-     <string>Connect VAM</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="startButton">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>510</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Start Flight</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="endButton">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>550</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>End Flight</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="conSim">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>550</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton { color: rgb(255,0,0); }</string>
-    </property>
-    <property name="text">
-     <string>Connect SIM</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="applyWeight">
-    <property name="geometry">
-     <rect>
-      <x>510</x>
-      <y>520</y>
-      <width>141</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Apply passenger and cargo weight to plane when Start Flight is clicked.</string>
-    </property>
-    <property name="text">
-     <string>Apply Weight</string>
-    </property>
-    <property name="checked">
-     <bool>true</bool>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QStatusBar" name="statusBar">
-   <property name="sizeGripEnabled">
-    <bool>false</bool>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
    </property>
+   <property name="minimumSize">
+    <size>
+     <width>700</width>
+     <height>601</height>
+    </size>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="minimumSize">
+       <size>
+        <width>696</width>
+        <height>477</height>
+       </size>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="planTab">
+       <attribute name="title">
+        <string>Flight Plan</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="3" column="2">
+           <widget class="QLineEdit" name="cruiseSpeed"/>
+          </item>
+          <item row="0" column="4">
+           <widget class="QLabel" name="label_19">
+            <property name="text">
+             <string>Tail Number</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QLabel" name="label_20">
+            <property name="text">
+             <string>Type of Flight</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QLineEdit" name="tailNumber"/>
+          </item>
+          <item row="1" column="5">
+           <widget class="QComboBox" name="flightType">
+            <item>
+             <property name="text">
+              <string>IFR</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>VFR</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="3" column="4">
+           <widget class="QLineEdit" name="pax"/>
+          </item>
+          <item row="3" column="3">
+           <widget class="QLineEdit" name="cruiseAlt"/>
+          </item>
+          <item row="3" column="5">
+           <widget class="QLineEdit" name="cargo"/>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_25">
+            <property name="text">
+             <string>Arrival ICAO</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLabel" name="label_28">
+            <property name="text">
+             <string>Total EET</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="3">
+           <widget class="QLabel" name="label_30">
+            <property name="text">
+             <string>Alternative 1</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="2">
+           <widget class="QLabel" name="label_29">
+            <property name="text">
+             <string>Endurance</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="5">
+           <widget class="QLabel" name="label_32">
+            <property name="text">
+             <string>Flight Number</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="4">
+           <widget class="QLabel" name="label_31">
+            <property name="text">
+             <string>Alternative 2</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="3">
+           <widget class="QLineEdit" name="aircraft">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="label_23">
+            <property name="text">
+             <string>Cruise Speed</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLabel" name="label_22">
+            <property name="text">
+             <string>Departure Time</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <widget class="QLabel" name="label_24">
+            <property name="text">
+             <string>FL/Altitude</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="4">
+           <widget class="QLabel" name="label_26">
+            <property name="text">
+             <string>Passengers</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="depTime"/>
+          </item>
+          <item row="2" column="5">
+           <widget class="QLabel" name="label_27">
+            <property name="text">
+             <string>Cargo</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_21">
+            <property name="text">
+             <string>Departure ICAO</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLineEdit" name="depIcao"/>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLabel" name="label_18">
+            <property name="text">
+             <string>Aircraft ICAO</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLineEdit" name="acIcao"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_17">
+            <property name="text">
+             <string>Aircraft</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLineEdit" name="arrIcao"/>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLineEdit" name="eet"/>
+          </item>
+          <item row="5" column="2">
+           <widget class="QLineEdit" name="endurance"/>
+          </item>
+          <item row="5" column="3">
+           <widget class="QLineEdit" name="alt1"/>
+          </item>
+          <item row="5" column="4">
+           <widget class="QLineEdit" name="alt2"/>
+          </item>
+          <item row="5" column="5">
+           <widget class="QLineEdit" name="flightNo"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_33">
+          <property name="text">
+           <string>Route</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPlainTextEdit" name="route">
+          <property name="minimumSize">
+           <size>
+            <width>661</width>
+            <height>111</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_34">
+          <property name="text">
+           <string>Other Information / Remarks</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPlainTextEdit" name="remarks">
+          <property name="minimumSize">
+           <size>
+            <width>661</width>
+            <height>111</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="dataTab">
+       <property name="minimumSize">
+        <size>
+         <width>690</width>
+         <height>451</height>
+        </size>
+       </property>
+       <attribute name="title">
+        <string>Flight Data</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <layout class="QGridLayout" name="gridLayout">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Altitude</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>IAS</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>VS</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>FOB</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="label_5">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>GS</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="label_6">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Latitude</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QLabel" name="label_7">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Longitude</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="2">
+           <widget class="QLabel" name="label_8">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Fuel Used</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QLabel" name="label_9">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>NM To Arrival</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="4">
+           <widget class="QLabel" name="label_12">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>ZFW</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="4">
+           <widget class="QLabel" name="label_11">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Flaps</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="4">
+           <widget class="QLabel" name="label_10">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Completed %</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="ias"/>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLineEdit" name="gs"/>
+          </item>
+          <item row="0" column="5">
+           <widget class="QLineEdit" name="distLeft"/>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="altitude"/>
+          </item>
+          <item row="2" column="3">
+           <widget class="QLineEdit" name="lat"/>
+          </item>
+          <item row="2" column="5">
+           <widget class="QProgressBar" name="completed">
+            <property name="value">
+             <number>0</number>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="vs"/>
+          </item>
+          <item row="3" column="3">
+           <widget class="QLineEdit" name="lon"/>
+          </item>
+          <item row="3" column="5">
+           <widget class="QLineEdit" name="flaps"/>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="fob"/>
+          </item>
+          <item row="4" column="3">
+           <widget class="QLineEdit" name="fu"/>
+          </item>
+          <item row="4" column="5">
+           <widget class="QLineEdit" name="zfw"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_13">
+          <property name="text">
+           <string>Flight Events</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTextEdit" name="flightEvents">
+          <property name="minimumSize">
+           <size>
+            <width>669</width>
+            <height>144</height>
+           </size>
+          </property>
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOn</enum>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_14">
+          <property name="text">
+           <string>Critical Events</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTextEdit" name="critEvents">
+          <property name="minimumSize">
+           <size>
+            <width>669</width>
+            <height>144</height>
+           </size>
+          </property>
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOn</enum>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="summaryTab">
+       <attribute name="title">
+        <string>Flight Summary</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="fsDepIcao">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_35">
+            <property name="text">
+             <string>Departure ICAO</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_36">
+            <property name="text">
+             <string>Arrival ICAO</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="fsArrIcao">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QLineEdit" name="fsPitch">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="fsZFW">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="label_39">
+            <property name="text">
+             <string>Critical Events</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="3">
+           <widget class="QLineEdit" name="fsFlaps">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="2">
+           <widget class="QLabel" name="label_47">
+            <property name="text">
+             <string>Landing IAS</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="3">
+           <widget class="QLineEdit" name="fsBank">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="3">
+           <widget class="QLineEdit" name="fsIAS">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0" colspan="4">
+           <widget class="QLabel" name="label_43">
+            <property name="text">
+             <string>Landing Analysis</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLineEdit" name="fsVS">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="label_45">
+            <property name="text">
+             <string>Landing Force G</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QLineEdit" name="fsG">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="label_46">
+            <property name="text">
+             <string>Landing Pitch</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="0" colspan="4">
+           <widget class="QLabel" name="label_50">
+            <property name="text">
+             <string>Pilot Comments</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_51">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="0" colspan="4">
+           <widget class="QPlainTextEdit" name="fsComments"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_38">
+            <property name="text">
+             <string>ZFW</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="fsDistance">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_37">
+            <property name="text">
+             <string>Distance</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QLabel" name="label_42">
+            <property name="text">
+             <string>Flight Fuel</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLineEdit" name="fsCritEvents">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="label_41">
+            <property name="text">
+             <string>Block Fuel</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLineEdit" name="fsDuration">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="3">
+           <widget class="QLineEdit" name="fsFFuel">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <widget class="QLineEdit" name="fsBFuel">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="label_44">
+            <property name="text">
+             <string>Landing VS</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="label_40">
+            <property name="text">
+             <string>Flight Duration</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="2">
+           <widget class="QLabel" name="label_49">
+            <property name="text">
+             <string>Landing Flaps</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="2">
+           <widget class="QLabel" name="label_48">
+            <property name="text">
+             <string>Landing Bank</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="label_52">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="chartTab">
+       <attribute name="title">
+        <string>Charts</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <layout class="QVBoxLayout" name="chartLayout"/>
+        </item>
+        <item>
+         <widget class="QFrame" name="frame_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QCheckBox" name="checkBox">
+             <property name="text">
+              <string>Altitude</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBox_2">
+             <property name="text">
+              <string>VS</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBox_3">
+             <property name="text">
+              <string>G Force</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="QFrame" name="frame">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>650</width>
+        <height>100</height>
+       </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QCheckBox" name="applyWeight">
+       <property name="geometry">
+        <rect>
+         <x>510</x>
+         <y>20</y>
+         <width>141</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Apply passenger and cargo weight to plane when Start Flight is clicked.</string>
+       </property>
+       <property name="text">
+        <string>Apply Weight</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="endButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>390</x>
+         <y>50</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>End Flight</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="callsign">
+       <property name="geometry">
+        <rect>
+         <x>86</x>
+         <y>20</y>
+         <width>131</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="password">
+       <property name="geometry">
+        <rect>
+         <x>86</x>
+         <y>50</y>
+         <width>131</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="connectButton">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>10</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton { color: rgb(255,0,0); }</string>
+       </property>
+       <property name="text">
+        <string>Connect VAM</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="conSim">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>50</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton { color: rgb(255,0,0); }</string>
+       </property>
+       <property name="text">
+        <string>Connect SIM</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_16">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>50</y>
+         <width>71</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Password</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="startButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>390</x>
+         <y>10</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Start Flight</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_15">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>71</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Callsign</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
-  <tabstop>tabWidget</tabstop>
   <tabstop>aircraft</tabstop>
   <tabstop>acIcao</tabstop>
   <tabstop>depIcao</tabstop>
