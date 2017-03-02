@@ -274,6 +274,17 @@ void MainWindow::uiUpdate() {
     ui->fu->setText(QString::number(startFuel-cur.fuel, 'f', 0)+" lb");
     ui->zfw->setText(QString::number(cur.zfw, 'f', 0)+" lb");
 
+    sRealTime->setText("Real: "+QDateTime::fromTime_t(tnow - startTime, Qt::UTC).toString("hh:mm:ss"));
+    QString fTime;
+    if (state >= CLIMB) {
+        if (state <= DESCEND)
+            fTime = QDateTime::fromTime_t(cur.time - onTakeoff.time - cur.pauseTime, Qt::UTC).toString("hh:mm:ss");
+        else
+            fTime = QDateTime::fromTime_t(onLanding.time - onTakeoff.time - onLanding.pauseTime, Qt::UTC).toString("hh:mm:ss");
+    } else {
+        fTime = "00:00:00";
+    }
+    sFlightTime->setText("Flight: "+fTime);
 
     if (state >= PREFLIGHT) {
         double distTotal = greatcircle(dep, arr);

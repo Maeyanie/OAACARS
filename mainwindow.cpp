@@ -36,9 +36,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
     state = OFFLINE;
     startFuel = 0.0f;
+    startTime = 0;
     maxG = 0.0f;
     memset(&cur, 0, sizeof(cur));
     onTakeoff = onLanding = cur;
+    sRealTime = new QLabel(this);
+    sRealTime->hide();
+    ui->statusBar->addPermanentWidget(sRealTime);
+    sFlightTime = new QLabel(this);
+    sFlightTime->hide();
+    ui->statusBar->addPermanentWidget(sFlightTime);
     uiTimer.start(1000);
 }
 
@@ -177,14 +184,15 @@ void MainWindow::on_startButton_clicked()
     for (int x = 0; x < 8; x++) cur.engine[x] = 0;
     mistakes.reset();
 
-    ui->tabWidget->setCurrentWidget(ui->dataTab);
-
     newEvent("FLIGHT STARTED");
     setDRef(sock, "oaacars/tracking", 1);
 
     sendUpdate();
     timer.start(60000);
+    ui->tabWidget->setCurrentWidget(ui->dataTab);
     ui->startButton->setEnabled(false);
+    sRealTime->show();
+    sFlightTime->show();
 }
 
 void MainWindow::on_endButton_clicked()
@@ -223,7 +231,7 @@ void MainWindow::on_endButton_clicked()
     msg["aircraft_type"] = ui->acIcao->text();
     msg["aircraft_registry"] = ui->tailNumber->text();
     msg["flight_status"] = "FLIGHT FINISHED";
-    msg["flight_duration"] = QString::number((onLanding.time-onTakeoff.time) / 3600.0, 'f', 2);
+    msg["flight_duration"] = QString::number((onLanding.time-onTakeoff.time-onLanding.pauseTime) / 3600.0, 'f', 2);
     msg["flight_fuel"] = QString::number(onTakeoff.fuel-onLanding.fuel, 'f', 0);
     msg["block_fuel"] = QString::number(startFuel-cur.fuel, 'f', 0);
     msg["final_fuel"] = QString::number(cur.fuel, 'f', 0);
@@ -275,8 +283,6 @@ void MainWindow::on_endButton_clicked()
     msg["taxi_speed"] = QString::number(mistakes.taxiSpeed);
     msg["qnh_takeoff"] = QString::number(mistakes.qnhTakeoff);
     msg["qnh_landing"] = QString::number(mistakes.qnhLanding);
-
-    msg["aircraftreg"] = ""; // This was sent blank in SIM ACARS too.
 
     QJsonArray ja;
     ja.append(msg);

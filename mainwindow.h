@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QUdpSocket>
+#include <QLabel>
 #include "va.h"
 #include "airports.h"
 
@@ -76,6 +77,7 @@ private:
     void unpaused();
 
     Ui::MainWindow *ui;
+    QLabel *sRealTime, *sFlightTime;
     QUdpSocket* sock;
     VA va;
     Airports airports;
