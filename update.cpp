@@ -108,8 +108,13 @@ void MainWindow::gotUpdate() {
                     break;
 
                 case 63: // payload weights and CG
-                    if (state <= CONNECTED) startFuel = val[2];
-                    if (val[2] > cur.fuel + 1.0 && state > PREFLIGHT) refuel(cur.fuel, val[2]);
+                    if (val[2] > cur.fuel) {
+                        if (state <= PREFLIGHT) {
+                            if (val[2] > startFuel) startFuel = val[2];
+                        } else if (val[2] > cur.fuel + 5.0) {
+                            refuel(cur.fuel, val[2]);
+                        }
+                    }
                     cur.zfw = val[0]+val[1];
                     cur.fuel = val[2];
                     break;
@@ -164,6 +169,8 @@ void MainWindow::gotUpdate() {
 }
 
 void MainWindow::sendUpdate() {
+    ui->statusBar->showMessage("Sending update...");
+
     QString statetext;
     switch (state) {
     case CONNECTED: // Should never happen, but just in case.
@@ -227,9 +234,11 @@ void MainWindow::sendUpdate() {
     QJsonDocument json;
     json.setArray(ja);
     va.sendUpdate(json);
+}
 
+void MainWindow::updateDone() {
     ui->statusBar->clearMessage();
-    ui->statusBar->showMessage("Update sent: "+statetext, 10000);
+    ui->statusBar->showMessage("Update sent.", 10000);
 }
 
 void MainWindow::uiUpdate() {
