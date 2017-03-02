@@ -20,7 +20,7 @@ enum State {
 };
 
 struct Status {
-    qint64 time;
+    qint64 time, rref;
     float realTime, flightTime, pauseTime;
     float pitch, bank, heading, vs, ias, gs, lat, lon, asl, agl, g;
     float flaps, zfw, fuel, distance, completed, remaining;
@@ -115,5 +115,6 @@ void memcat(char** ptr, const char* data);
 void memcat(char** ptr, const int data);
 void sendDRef(QUdpSocket* sock, const char *name, qint32 id, qint32 freq = 20);
 void setDRef(QUdpSocket* sock, const char* name, float val);
+double greatcircle(QPair<double,double> src, QPair<double,double> tgt);
 
 #endif // MAINWINDOW_H

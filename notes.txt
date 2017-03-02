@@ -1,3 +1,7 @@
+___TODO List___
+Don't show distance remaining until there's a valid destination set
+
+
 ___Login exchange___
 POST /vaManager/vam//vam_acars_remove_book_aircraft.php HTTP/1.1
 Content-Type: text/json

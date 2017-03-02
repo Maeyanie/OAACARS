@@ -111,9 +111,18 @@ void MainWindow::on_connectButton_clicked()
 
 void MainWindow::on_startButton_clicked()
 {
+    qint64 tNow = time(NULL);
+    if (cur.time < tNow - 5 || cur.rref < tNow - 5) {
+        qint32 ret = QMessageBox::warning(this, "X-Plane Not Connected",
+                                          QString("I don't seem to be getting all the needed data from X-Plane.\nThis flight may not work properly.\n"
+                                                  "Continue anyhow?"),
+                                          QMessageBox::Yes, QMessageBox::No);
+        if (ret == QMessageBox::No) return;
+    }
+
     if (cur.agl > 20.0) {
         qint32 ret = QMessageBox::warning(this, "High Ground AGL",
-                                          QString("Your AGL altitude of %1 seems a little too high. Are you sure you're on the ground?").arg(cur.agl),
+                                          QString("Your AGL altitude of %1 seems a little too high.\nAre you sure you're on the ground?").arg(cur.agl),
                                           QMessageBox::Yes, QMessageBox::No);
         if (ret == QMessageBox::No) return;
     }
@@ -139,6 +148,15 @@ void MainWindow::on_startButton_clicked()
     }
     arr = *point;
 
+    double depDist = greatcircle(QPair<double,double>(cur.lat, cur.lon), dep);
+    if (depDist > 10.0) {
+        qint32 ret = QMessageBox::warning(this, "Not At Departure Airport",
+                                          QString("Your distance of %1 nmi from the departure airport %2 seems a little too high.\n"
+                                                  "Are you sure you're at the right place?").arg(depDist).arg(ui->depIcao->text()),
+                                          QMessageBox::Yes, QMessageBox::No);
+        if (ret == QMessageBox::No) return;
+    }
+
     if (ui->applyWeight->isChecked()) {
         float totalWeight = ui->pax->text().toFloat() * 80.0 + ui->cargo->text().toFloat();
         setDRef(sock, "sim/flightmodel/weight/m_fixed", totalWeight);
@@ -151,6 +169,7 @@ void MainWindow::on_startButton_clicked()
     startLat = cur.lat;
     startLon = cur.lon;
     trackId = eventId = 1;
+    critEvents = 0;
 
     state = PREFLIGHT;
     cur.flaps = 0;
@@ -170,6 +189,14 @@ void MainWindow::on_startButton_clicked()
 
 void MainWindow::on_endButton_clicked()
 {
+    double arrDist = greatcircle(QPair<double,double>(cur.lat, cur.lon), arr);
+    if (arrDist > 10.0) {
+        qint32 ret = QMessageBox::warning(this, "Not At Arrival Airport",
+                                          QString("Your distance of %1 nmi from the arrival airport %2 seems a little too high.\n"
+                                                  "Are you sure you're at the right place?").arg(arrDist).arg(ui->arrIcao->text()),
+                                          QMessageBox::Yes, QMessageBox::No);
+        if (ret == QMessageBox::No) return;
+    }
     timer.stop();
     ui->statusBar->showMessage("Submitting...");
 
@@ -230,7 +257,7 @@ void MainWindow::on_endButton_clicked()
     msg["network"] = "UNSUPPORTED";
     msg["comments"] = "";
 
-    msg["pause_time"] = "0.00";
+    msg["pause_time"] = QString::number(onLanding.pauseTime, 'f', 1);
     msg["crash"] = QString::number(mistakes.crash);
     msg["beacon_off"] = QString::number(mistakes.beaconOff);
     msg["ias_below_10000_ft"] = QString::number(mistakes.iasLow);
@@ -337,7 +364,7 @@ void MainWindow::on_conSim_clicked()
     pos = buffer;
     memcat(&pos, "ISET", 5);
     memcat(&pos, 64);
-    memcat(&pos, "127.000.000.001", 16);
+    memcat(&pos, "127.0.0.1", 10); pos += 6;
     memcat(&pos, "32123", 6); pos += 2;
     memcat(&pos, 1);
     sock->writeDatagram(buffer, (pos-buffer), addr, 49000);

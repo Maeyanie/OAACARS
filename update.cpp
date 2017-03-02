@@ -17,6 +17,7 @@ void MainWindow::gotUpdate() {
 
         memcpy(msg, buffer, 4);
         if (!memcmp(msg, "DATA", 4)) {
+            cur.time = time(NULL);
             for (ptr = buffer+5; ptr < buffer+len; ptr += 36) {
                 memcpy(&type, ptr, 4);
                 memcpy(val, ptr+4, 8*sizeof(float));
@@ -148,7 +149,7 @@ void MainWindow::gotUpdate() {
                 switch (type) {
                 case 1: // sim/flightmodel/forces/fnrml_gear
                     if (state >= CLIMB && state <= DESCEND && val[0] > 0.0) landing();
-                    cur.time = time(NULL); // Keep this in the most-recently-added packet type.
+                    cur.rref = time(NULL); // Keep this in the most-recently-added packet type.
                     break;
 
                 default:
@@ -237,51 +238,39 @@ void MainWindow::sendUpdate() {
     ui->statusBar->showMessage("Update sent: "+statetext, 10000);
 }
 
-#define R 3443.9185 // Earth radius in nmi
-double greatcircle(QPair<double,double> src, QPair<double,double> tgt) {
-    double lat1 = src.first * (M_PI/180.0);
-    double lon1 = src.second * (M_PI/180.0);
-    double lat2 = tgt.first * (M_PI/180.0);
-    double lon2 = tgt.second * (M_PI/180.0);
-
-    double deltalat = lat2 - lat1;
-    double deltalon = lon2 - lon1;
-
-    double a = sin(deltalat/2) * sin(deltalat/2) +
-                cos(lat1) * cos(lat2) *
-                sin(deltalon/2) * sin(deltalon/2);
-    double c = 2 * atan2(sqrt(a), sqrt(1-a));
-    return R * c;
-}
-#undef R
-
 void MainWindow::uiUpdate() {
-    static bool simCon = false;
-
+    static qint32 simCon = 0;
     qint64 tnow = time(NULL);
 
-    if (cur.time < tnow - 5 && simCon) {
+    if (cur.time < tnow - 5 && cur.rref < tnow - 5) {
         // Disconnected
-        if (simCon) {
+        if (simCon != 0) {
             ui->conSim->setStyleSheet("QPushButton { color: rgb(255,0,0); }");
             simCon = 0;
+            setDRef(sock, "oaacars/connected", 0);
         }
-        setDRef(sock, "oaacars/connected", 0);
-    } else if (cur.time >= tnow - 5) {
-        // Connected
-        if (!simCon) {
-            ui->conSim->setStyleSheet("QPushButton { color: rgb(0,255,0); }");
+    } else if (cur.time < tnow - 5 || cur.rref < tnow - 5) {
+        // Partly connected
+        if (simCon != 1) {
+            ui->conSim->setStyleSheet("QPushButton { color: rgb(255,255,0); }");
             simCon = 1;
+            setDRef(sock, "oaacars/connected", 0);
         }
-        setDRef(sock, "oaacars/connected", cur.realTime);
+    } else {
+        // Connected
+        if (simCon != 2) {
+            ui->conSim->setStyleSheet("QPushButton { color: rgb(0,255,0); }");
+            simCon = 2;
+            setDRef(sock, "oaacars/connected", cur.realTime);
+        }
     }
 
 
     ui->ias->setText(QString::number(cur.ias, 'f', 1)+" kn");
-    ui->gs->setText(QString::number(cur.gs, 'f', 0)+" kn");
+    ui->gs->setText(QString::number(cur.gs, 'f', 1)+" kn");
     ui->vs->setText(QString::number(cur.vs, 'f', 1)+" fpm");
 
-    ui->flaps->setText(QString::number(cur.flaps*100.0, 'f', 0)+"%");
+    ui->flaps->setText(QString::number(cur.flaps, 'f', 0)+"%");
 
     ui->lat->setText(QString::number(cur.lat, 'f', 2)+" deg");
     ui->lon->setText(QString::number(cur.lon, 'f', 2)+" deg");
@@ -292,13 +281,16 @@ void MainWindow::uiUpdate() {
     ui->zfw->setText(QString::number(cur.zfw, 'f', 0)+" lb");
 
 
-    double distTotal = greatcircle(dep, arr);
-    double distLeft = greatcircle(QPair<double,double>(cur.lat, cur.lon), arr);
-    double done = distLeft / distTotal;
-    cur.remaining = distLeft;
-    cur.completed = (1.0 - done) * 100;
-    ui->distLeft->setText(QString::number(distLeft, 'f', 1));
-    ui->completed->setValue(cur.completed);
+    if (state >= PREFLIGHT) {
+        double distTotal = greatcircle(dep, arr);
+        double distLeft = greatcircle(QPair<double,double>(cur.lat, cur.lon), arr);
+        double done = distLeft / distTotal;
+        cur.remaining = distLeft;
+        cur.completed = (1.0 - done) * 100;
+        ui->distLeft->setText(QString::number(distLeft, 'f', 1));
+        ui->completed->setValue(cur.completed);
+    }
+
 
     if (ui->checkBox->isChecked()) altChart.update();
     if (ui->checkBox_2->isChecked()) vsChart.update();
