@@ -24,6 +24,7 @@ void MainWindow::newEvent(QString desc, bool critical) {
     e["critical"] = critical ? "1" : "0";
 
     if (critical) {
+        critEvents++;
         ui->critEvents->append(QTime::currentTime().toString("hh:mm:ss")+": "+desc);
     } else {
         ui->flightEvents->append(QTime::currentTime().toString("hh:mm:ss")+": "+desc);

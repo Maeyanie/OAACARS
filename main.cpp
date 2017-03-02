@@ -47,3 +47,21 @@ void setDRef(QUdpSocket* sock, const char* name, float val) {
     memcat(&pos, name);
     sock->writeDatagram(buffer, 509, addr, 49000);
 }
+
+#define R 3443.9185 // Earth radius in nmi
+double greatcircle(QPair<double,double> src, QPair<double,double> tgt) {
+    double lat1 = src.first * (M_PI/180.0);
+    double lon1 = src.second * (M_PI/180.0);
+    double lat2 = tgt.first * (M_PI/180.0);
+    double lon2 = tgt.second * (M_PI/180.0);
+
+    double deltalat = lat2 - lat1;
+    double deltalon = lon2 - lon1;
+
+    double a = sin(deltalat/2) * sin(deltalat/2) +
+                cos(lat1) * cos(lat2) *
+                sin(deltalon/2) * sin(deltalon/2);
+    double c = 2 * atan2(sqrt(a), sqrt(1-a));
+    return R * c;
+}
+#undef R
