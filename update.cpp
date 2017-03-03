@@ -111,7 +111,7 @@ void MainWindow::gotUpdate() {
                     if (val[2] > cur.fuel) {
                         if (state <= PREFLIGHT) {
                             if (val[2] > startFuel) startFuel = val[2];
-                        } else if (val[2] > cur.fuel + 5.0) {
+                        } else if ((val[2] - cur.fuel) > (cur.fuel * 0.01) || val[2] > cur.fuel + 10.0) {
                             refuel(cur.fuel, val[2]);
                         }
                     }
