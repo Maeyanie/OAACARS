@@ -10,7 +10,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = OAACARS
 TEMPLATE = app
-
+RC_ICONS = icons/OAAE_Star_Blue_trans.png.ico
+ICON = icons/OAAE_Star_Blue_trans.png.icns
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -26,9 +27,9 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 DISTFILES += \
-    notes.txt \
     airports.sh \
-    airports.csv
+    airports.csv \
+    LICENSE.md
 
 LIBS += -L$$PWD -lcurl
 
