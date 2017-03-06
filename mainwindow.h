@@ -79,6 +79,7 @@ private:
     void stall();
     void paused();
     void unpaused();
+    void checkFuel(float fuel);
 
     Ui::MainWindow *ui;
     QLabel *sRealTime, *sFlightTime;
