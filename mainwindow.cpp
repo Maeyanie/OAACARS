@@ -238,7 +238,7 @@ void MainWindow::on_endButton_clicked()
     msg["zfw"] = ui->zfw->text();
     msg["flight_date"] = QDateTime::currentDateTime().toString("yyyy-M-d hh:mm:ss");
 
-    msg["distance"] = onLanding.distance;
+    msg["distance"] = greatcircle(dep, arr);
 
     msg["landing_vs"] = QString::number(onLanding.vs);
     msg["landing_ias"] = QString::number(onLanding.ias);
