@@ -108,13 +108,7 @@ void MainWindow::gotUpdate() {
                     break;
 
                 case 63: // payload weights and CG
-                    if (val[2] > cur.fuel) {
-                        if (state <= PREFLIGHT) {
-                            if (val[2] > startFuel) startFuel = val[2];
-                        } else if ((val[2] - cur.fuel) > (cur.fuel * 0.01) || val[2] > cur.fuel + 10.0) {
-                            refuel(cur.fuel, val[2]);
-                        }
-                    }
+                    checkFuel(val[2]);
                     cur.zfw = val[0]+val[1];
                     cur.fuel = val[2];
                     break;
