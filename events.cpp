@@ -68,7 +68,7 @@ void MainWindow::landing() {
 
     ui->fsDepIcao->setText(ui->depIcao->text());
     ui->fsArrIcao->setText(ui->arrIcao->text());
-    ui->fsDistance->setText(QString::number(onLanding.distance, 'f', 1));
+    ui->fsDistance->setText(QString::number(onLanding.distance-onTakeoff.distance, 'f', 1));
     ui->fsZFW->setText(ui->zfw->text());
     ui->fsCritEvents->setText(QString::number(critEvents));
     ui->fsDuration->setText(QString::number((onLanding.time-onTakeoff.time)/3600.0, 'f', 2));
