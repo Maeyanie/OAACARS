@@ -44,6 +44,8 @@ void MainWindow::gotUpdate() {
                     cur.gs = val[3];
 
                     if (state <= PREFLIGHT && cur.gs > 2.0) taxi();
+                    if ((state == TAXITORWY || state == TAXITOGATE) && cur.gs > 25.0) taxiSpeed();
+                    if (cur.ias > 250.0 && cur.asl < 10000.0) iasBelow10k();
                     break;
 
                 case 4: //         mach  ----- fpm   ----- Gnorm Gaxil Gside -----
@@ -80,6 +82,8 @@ void MainWindow::gotUpdate() {
                     break;
 
                 case 20: //        latd  lond  altsl altgl runwy aind lats  lonw
+                    // Travelling 0.1 nmi in 1/20th of a second would be about mach 10, so fairly safe call it a slew.
+                    if (greatcircle(cur.lat, cur.lon, val[0], val[1]) > 0.1) slew(greatcircle(cur.lat, cur.lon, val[0], val[1]));
                     cur.lat = val[0];
                     cur.lon = val[1];
                     cur.asl = val[2];
@@ -297,7 +301,7 @@ void MainWindow::uiUpdate() {
 
     if (state >= PREFLIGHT) {
         double distTotal = greatcircle(dep, arr);
-        double distLeft = greatcircle(QPair<double,double>(cur.lat, cur.lon), arr);
+        double distLeft = greatcircle(cur.lat, cur.lon, arr);
         double done = distLeft / distTotal;
         cur.remaining = distLeft;
         cur.completed = (1.0 - done) * 100;

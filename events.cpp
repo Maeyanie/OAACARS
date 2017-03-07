@@ -36,6 +36,8 @@ void MainWindow::newEvent(QString desc, bool critical) {
 void MainWindow::taxi() {
     state = TAXITORWY;
     newEvent("TAXI TO RWY");
+
+    if (!cur.txi) taxiNoLights();
 }
 
 void MainWindow::takeoff() {
@@ -43,6 +45,8 @@ void MainWindow::takeoff() {
 
     state = CRUISE;
     newEvent("TAKEOFF");
+
+    if (!cur.ldn) takeoffNoLights();
 }
 
 void MainWindow::climb() {
@@ -63,6 +67,9 @@ void MainWindow::descend() {
 void MainWindow::landing() {
     state = TAXITOGATE;
     newEvent("LANDING");
+
+    if (!cur.ldn) landingNoLights();
+    if (greatcircle(cur.lat, cur.lon, arr) > 10.0) wrongAirport();
 
     onLanding = cur;
 
@@ -92,6 +99,8 @@ void MainWindow::deboard() {
 void MainWindow::engineStart(int e) {
     newEvent(QString("STARTING ENGINE %1").arg(e+1));
     cur.engine[e] = 1;
+
+    if (!cur.bea) beaconOff();
 }
 void MainWindow::engineStop(int e) {
     newEvent(QString("STOPPING ENGINE %1").arg(e+1));
@@ -149,4 +158,88 @@ void MainWindow::paused() {
 }
 void MainWindow::unpaused() {
     newEvent("UNPAUSED", true);
+}
+
+void MainWindow::beaconOff() {
+    static qint64 last = 0;
+    if (last < time(NULL) - 10) newEvent("ENGINE RUNNING WITH BEACON OFF", true);
+    last = time(NULL);
+
+    mistakes.beaconOff = true;
+}
+
+void MainWindow::iasBelow10k() {
+    static qint64 last = 0;
+    if (last < time(NULL) - 10) newEvent("IAS ABOVE 250 KNOTS BELOW 10000 ft", true);
+    last = time(NULL);
+
+    mistakes.iasLow = true;
+}
+
+void MainWindow::lightsBelow10k() { // Not yet called anywhere
+    static qint64 last = 0;
+    if (last < time(NULL) - 10) newEvent("LIGHTS OFF BELOW 10000 ft", true);
+    last = time(NULL);
+
+    mistakes.lightsLow = true;
+}
+
+void MainWindow::lightsAbove10k() { // Not yet called anywhere
+    static qint64 last = 0;
+    if (last < time(NULL) - 10) newEvent("LIGHTS ON ABOVE 10000 ft", true);
+    last = time(NULL);
+
+    mistakes.lightsHigh = true;
+}
+
+void MainWindow::slew(float distance) {
+    newEvent(QString("SLEW: %1 nmi").arg(distance), true);
+
+    mistakes.slew = true;
+}
+
+void MainWindow::taxiNoLights() {
+    static qint64 last = 0;
+    if (last < time(NULL) - 10) newEvent("TAXING WITH TAXI LIGHTS OFF", true);
+    last = time(NULL);
+
+    mistakes.taxiLights = true;
+}
+
+void MainWindow::takeoffNoLights() {
+    newEvent("TAKEOFF WITH LANDING LIGHTS OFF", true);
+
+    mistakes.takeoffLights = true;
+}
+
+void MainWindow::landingNoLights(){
+    newEvent("LANDING WITH LANDING LIGHTS OFF", true);
+
+    mistakes.landingLights = true;
+}
+
+void MainWindow::wrongAirport() {
+    newEvent("LANDED AT WRONG LOCATION", true);
+
+    mistakes.landingAirport = true;
+}
+
+void MainWindow::taxiSpeed() {
+    static qint64 last = 0;
+    if (last < time(NULL) - 10) newEvent("TAXI SPEED ABOVE 25 KTS", true);
+    last = time(NULL);
+
+    mistakes.taxiSpeed = true;
+}
+
+void MainWindow::qnhTakeoff() { // Not yet called anywhere
+    newEvent("WRONG QNH AT TAKEOFF", true);
+
+    mistakes.qnhTakeoff = true;
+}
+
+void MainWindow::qnhLanding() { // Not yet called anywhere
+    newEvent("WRONG QNH AT LANDING", true);
+
+    mistakes.qnhLanding = true;
 }
