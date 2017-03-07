@@ -108,7 +108,7 @@ void MainWindow::gotUpdate() {
                     break;
 
                 case 63: // payload weights and CG
-                    checkFuel(val[2]);
+                    if (!isPaused) checkFuel(val[2]);
                     cur.zfw = val[0]+val[1];
                     cur.fuel = val[2];
                     break;
