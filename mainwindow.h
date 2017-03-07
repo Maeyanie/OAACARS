@@ -70,11 +70,23 @@ private:
     void engineStart(int e);
     void engineStop(int e);
     void refuel(float prev, float cur);
+    void checkFuel(float fuel);
     void overspeed();
     void stall();
     void paused();
     void unpaused();
-    void checkFuel(float fuel);
+    void beaconOff();
+    void iasBelow10k();
+    void lightsBelow10k();
+    void lightsAbove10k();
+    void slew(float);
+    void taxiNoLights();
+    void takeoffNoLights();
+    void landingNoLights();
+    void wrongAirport();
+    void taxiSpeed();
+    void qnhTakeoff();
+    void qnhLanding();
 
     Ui::MainWindow *ui;
     QLabel *sRealTime, *sFlightTime;
@@ -112,5 +124,8 @@ void memcat(char** ptr, const int data);
 void sendDRef(QUdpSocket* sock, const char *name, qint32 id, qint32 freq = 20);
 void setDRef(QUdpSocket* sock, const char* name, float val);
 double greatcircle(QPair<double,double> src, QPair<double,double> tgt);
+double greatcircle(double srcLat, double srcLon, QPair<double,double> tgt);
+double greatcircle(QPair<double,double> src, double tgtLat, double tgtLon);
+double greatcircle(double srcLat, double srcLon, double tgtLat, double tgtLon);
 
 #endif // MAINWINDOW_H

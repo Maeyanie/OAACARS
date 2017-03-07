@@ -155,7 +155,7 @@ void MainWindow::on_startButton_clicked()
     }
     arr = *point;
 
-    double depDist = greatcircle(QPair<double,double>(cur.lat, cur.lon), dep);
+    double depDist = greatcircle(cur.lat, cur.lon, dep);
     if (depDist > 10.0) {
         qint32 ret = QMessageBox::warning(this, "Not At Departure Airport",
                                           QString("Your distance of %1 nmi from the departure airport %2 seems a little too high.\n"
@@ -197,7 +197,7 @@ void MainWindow::on_startButton_clicked()
 
 void MainWindow::on_endButton_clicked()
 {
-    double arrDist = greatcircle(QPair<double,double>(cur.lat, cur.lon), arr);
+    double arrDist = greatcircle(cur.lat, cur.lon, arr);
     if (arrDist > 10.0) {
         qint32 ret = QMessageBox::warning(this, "Not At Arrival Airport",
                                           QString("Your distance of %1 nmi from the arrival airport %2 seems a little too high.\n"
