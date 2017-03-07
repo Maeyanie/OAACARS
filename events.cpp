@@ -121,10 +121,10 @@ void MainWindow::checkFuel(float fuel) {
     int max = 0.0;
     for (int x = 0; x < 20; x++) if (window[x] > max) max = window[x];
 
-    if (fuel > max && state > PREFLIGHT) refuel(max, fuel);
+    if (fuel > max && state > PREFLIGHT && ((fuel - max) > 1.0 || (fuel - max) > startFuel * 0.01)) refuel(max, fuel);
 
     window[pos++] = fuel;
-    if (pos == 20) pos = 0;
+    if (pos >= 20) pos = 0;
 }
 
 void MainWindow::overspeed() {
