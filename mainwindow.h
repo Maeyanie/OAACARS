@@ -89,7 +89,7 @@ private:
     void takeoffNoLights();
     void landingNoLights();
     void wrongAirport();
-    void taxiSpeed();
+    void taxiSpeed(float speed);
     void qnhTakeoff();
     void qnhLanding();
 

@@ -122,15 +122,16 @@ void MainWindow::refuel(float prev, float cur) {
 
     mistakes.refuel = 1;
 }
-
 void MainWindow::checkFuel(float fuel) {
     static float window[20];
     static int pos = 0;
 
     int max = 0.0;
-    for (int x = 0; x < 20; x++) if (window[x] > max) max = window[x];
+    for (int x = 0; x < 20; x++) {
+        if (window[x] > max) max = window[x];
+    }
 
-    if (fuel > max && state > PREFLIGHT && ((fuel - max) > 1.0 || (fuel - max) > startFuel * 0.01)) refuel(max, fuel);
+    if (fuel > max && state > PREFLIGHT && (fuel - max) > 1.0) refuel(max, fuel);
 
     window[pos++] = fuel;
     if (pos >= 20) pos = 0;
@@ -224,9 +225,9 @@ void MainWindow::wrongAirport() {
     mistakes.landingAirport = true;
 }
 
-void MainWindow::taxiSpeed() {
+void MainWindow::taxiSpeed(float speed) {
     static qint64 last = 0;
-    if (last < time(NULL) - 10) newEvent("TAXI SPEED ABOVE 25 KTS", true);
+    if (last < time(NULL) - 10) newEvent(QString("TAXI SPEED ABOVE 25 KTS (%1)").arg(speed), true);
     last = time(NULL);
 
     mistakes.taxiSpeed = true;

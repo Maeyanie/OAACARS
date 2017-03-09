@@ -44,7 +44,7 @@ void MainWindow::gotUpdate() {
                     cur.gs = val[3];
 
                     if (state <= PREFLIGHT && cur.gs > 2.0) taxi();
-                    if ((state == TAXITORWY || state == TAXITOGATE) && cur.gs > 25.0) taxiSpeed();
+                    if ((state == TAXITORWY || state == TAXITOGATE) && cur.gs > 25.0) taxiSpeed(cur.gs);
                     if (cur.ias > 250.0 && cur.asl < 10000.0) iasBelow10k();
                     break;
 
