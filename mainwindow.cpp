@@ -295,6 +295,11 @@ void MainWindow::on_endButton_clicked()
 
     setDRef(sock, "oaacars/tracking", 0);
     state = OFFLINE;
+    startFuel = 0.0f;
+    startTime = 0;
+    maxG = 0.0f;
+    memset(&cur, 0, sizeof(cur));
+    onTakeoff = onLanding = cur;
     ui->endButton->setEnabled(false);
     ui->statusBar->clearMessage();
     ui->statusBar->showMessage("Flight submitted.", 10000);
