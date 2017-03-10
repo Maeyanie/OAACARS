@@ -41,7 +41,7 @@ void MainWindow::taxi() {
 }
 
 void MainWindow::takeoff() {
-    onTakeoff = cur;
+    if (onTakeoff.time == 0) onTakeoff = cur;
 
     state = CRUISE;
     newEvent("TAKEOFF");
