@@ -84,7 +84,8 @@ void MainWindow::gotUpdate() {
 
                 case 20: //        latd  lond  altsl altgl runwy aind lats  lonw
                     // Travelling 0.1 nmi in 1/20th of a second would be about mach 10, so fairly safe call it a slew.
-                    if (greatcircle(cur.lat, cur.lon, val[0], val[1]) > 0.1) slew(greatcircle(cur.lat, cur.lon, val[0], val[1]));
+                    if (greatcircle(cur.lat, cur.lon, val[0], val[1]) > 0.1 && state >= PREFLIGHT && cur.lat != 0.0 && cur.lon != 0.0)
+                        slew(greatcircle(cur.lat, cur.lon, val[0], val[1]));
                     cur.lat = val[0];
                     cur.lon = val[1];
                     cur.asl = val[2];
