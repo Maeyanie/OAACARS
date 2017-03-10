@@ -11,6 +11,7 @@ void MainWindow::gotUpdate() {
     char msg[5] = "    ";
     int type;
     float val[8];
+    bool onRwy = false;
 
     while (sock->hasPendingDatagrams()) {
         len = sock->readDatagram(buffer, 2048);
@@ -44,7 +45,7 @@ void MainWindow::gotUpdate() {
                     cur.gs = val[3];
 
                     if (state <= PREFLIGHT && cur.gs > 2.0) taxi();
-                    if ((state == TAXITORWY || state == TAXITOGATE) && cur.gs > 25.0) taxiSpeed(cur.gs);
+                    if ((state == TAXITORWY || state == TAXITOGATE) && cur.gs > 25.0 && !onRwy) taxiSpeed(cur.gs);
                     if (cur.ias > 250.0 && cur.asl < 10000.0) iasBelow10k();
                     break;
 
@@ -88,6 +89,7 @@ void MainWindow::gotUpdate() {
                     cur.lon = val[1];
                     cur.asl = val[2];
                     cur.agl = val[3];
+                    onRwy = (val[4] != 0.0);
                     if ((state < CLIMB || state > DESCEND) && val[3] > (groundAGL + 10.0)) takeoff();
                     if (state >= CLIMB && state <= DESCEND && val[3] < groundAGL + 5 && cur.gs < 25) {
                         newEvent("Fallback landing triggered.", true);
