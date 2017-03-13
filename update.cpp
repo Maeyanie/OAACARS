@@ -60,10 +60,9 @@ void MainWindow::gotUpdate() {
                             if (state != DESCEND) descend();
                         }
                     }
-                    cur.g = val[4];
-                    if (val[4] < 0.0) val[4] = -val[4];
-                    if (val[4] < 500.0 && val[4] > maxG) {
-                        maxG = val[4];
+                    cur.g = fabs(val[4]) + fabs(val[5]) + fabs(val[6]);
+                    if (state > PREFLIGHT && cur.g > maxG) {
+                        maxG = cur.g;
                         qInfo("New Max G: %f", maxG);
                     }
                     break;
