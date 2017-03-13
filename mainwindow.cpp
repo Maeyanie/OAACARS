@@ -359,13 +359,14 @@ void MainWindow::on_conSim_clicked()
     memcat(&pos, 1); // times
     memcat(&pos, 3); // speeds
     memcat(&pos, 4); // Mach, VVI, G-load
-    memcat(&pos, 13);// trim/flap/slat/s-brakes
-    memcat(&pos, 14);// gear/brakes
-    memcat(&pos, 17);// pitch, roll, headings
-    memcat(&pos, 20);// lat, lon, altitude
-    memcat(&pos, 21);// loc, vel, dist traveled
+    memcat(&pos, 13); // trim/flap/slat/s-brakes
+    memcat(&pos, 14); // gear/brakes
+    memcat(&pos, 17); // pitch, roll, headings
+    memcat(&pos, 20); // lat, lon, altitude
+    memcat(&pos, 21); // loc, vel, dist traveled
     memcat(&pos, 45); // FF
-    memcat(&pos, 63);// payload weights and CG
+    memcat(&pos, 63); // payload weights and CG
+    memcat(&pos, 66); // landing gear vert force
     memcat(&pos, 106); // switches 1: electrical
     memcat(&pos, 114); // annunciators: general #2
     memcat(&pos, 127); // warning status

@@ -118,6 +118,16 @@ void MainWindow::gotUpdate() {
                     cur.fuel = val[2];
                     break;
 
+                case 66: // landing gear vert force
+                    if (state >= CLIMB && state <= DESCEND) {
+                        bool found = false;
+                        for (int x = 0; x < 8; x++) {
+                            if (val[x] > 0.0) found = true;
+                        }
+                        if (found) landing();
+                    }
+                    break;
+
                 case 106: // switches 1: electrical
                     cur.nav = val[1];
                     cur.bea = val[2];
