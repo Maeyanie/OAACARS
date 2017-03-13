@@ -65,8 +65,12 @@ void MainWindow::descend() {
 }
 
 void MainWindow::landing() {
+    if (cur.vs < -650.0) crashed(QString("IMPACT AT %1 FPM").arg(cur.vs));
+    else if (cur.g > 15.0) crashed(QString("IMPACT AT %1 G").arg(cur.g));
+    else if (!cur.onRwy) crashed("NOT ON RUNWAY");
+    else newEvent("LANDING");
+
     state = TAXITOGATE;
-    newEvent("LANDING");
 
     if (!cur.ldn) landingNoLights();
     if (greatcircle(cur.lat, cur.lon, arr) > 10.0) wrongAirport();
@@ -243,4 +247,12 @@ void MainWindow::qnhLanding() { // Not yet called anywhere
     newEvent("WRONG QNH AT LANDING", true);
 
     mistakes.qnhLanding = true;
+}
+
+void MainWindow::crashed(QString reason) {
+    if (state <= PREFLIGHT || mistakes.crash) return;
+
+    newEvent("CRASHED: "+reason, true);
+
+    mistakes.crash = true;
 }
