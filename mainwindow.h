@@ -28,7 +28,7 @@ struct Status {
     char engine[8];
     bool gear, onRwy;
     bool bea, nav, ldn, str, txi;
-    float winddeg, windknots, oat;
+    float qnhReal, qnhSet, winddeg, windknots, oat;
 };
 
 namespace Ui {

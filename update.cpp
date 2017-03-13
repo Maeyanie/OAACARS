@@ -66,6 +66,20 @@ void MainWindow::gotUpdate() {
                     }
                     break;
 
+                case 5: //        SLprs SLtmp ----- wnspd wndir trb   prec  hail
+                    cur.qnhReal = var[0];
+                    cur.windknots = var[3];
+                    cur.winddeg = var[4];
+                    break;
+
+                case 6: //        AMprs AMtmp LEtmp densr Aktas Qpsf  ----- gravi
+                    cur.oat = var[1];
+                    break;
+
+                case 7: //        baro  edens vacum vacum elec  elec  ahrs  ahrs
+                    cur.qnhSet = var[0];
+                    break;
+
                 case 13: //        telev talrn trudr fhndl fposn srtio sbhdl sbpos
                     cur.flaps = val[4]*100.0;
                     break;

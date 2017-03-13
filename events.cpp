@@ -47,6 +47,7 @@ void MainWindow::takeoff() {
     newEvent("TAKEOFF");
 
     if (!cur.ldn) takeoffNoLights();
+    if (fabs(cur.qnhReal - cur.qnhSet) > 0.05) qnhTakeoff();
 }
 
 void MainWindow::climb() {
@@ -70,11 +71,11 @@ void MainWindow::landing() {
     else if (!cur.onRwy) crashed("NOT ON RUNWAY");
     else newEvent("LANDING");
 
-    state = TAXITOGATE;
-
     if (!cur.ldn) landingNoLights();
+    if (fabs(cur.qnhReal - cur.qnhSet) > 0.05) qnhLanding();
     if (greatcircle(cur.lat, cur.lon, arr) > 10.0) wrongAirport();
 
+    state = TAXITOGATE;
     onLanding = cur;
 
     ui->fsDepIcao->setText(ui->depIcao->text());
@@ -237,13 +238,13 @@ void MainWindow::taxiSpeed(float speed) {
     mistakes.taxiSpeed = true;
 }
 
-void MainWindow::qnhTakeoff() { // Not yet called anywhere
+void MainWindow::qnhTakeoff() {
     newEvent("WRONG QNH AT TAKEOFF", true);
 
     mistakes.qnhTakeoff = true;
 }
 
-void MainWindow::qnhLanding() { // Not yet called anywhere
+void MainWindow::qnhLanding() {
     newEvent("WRONG QNH AT LANDING", true);
 
     mistakes.qnhLanding = true;

@@ -359,6 +359,9 @@ void MainWindow::on_conSim_clicked()
     memcat(&pos, 1); // times
     memcat(&pos, 3); // speeds
     memcat(&pos, 4); // Mach, VVI, G-load
+    memcat(&pos, 5); // atmosphere: weather
+    memcat(&pos, 6); // atmosphere: aircraft
+    memcat(&pos, 7); // system pressures
     memcat(&pos, 13); // trim/flap/slat/s-brakes
     memcat(&pos, 14); // gear/brakes
     memcat(&pos, 17); // pitch, roll, headings
