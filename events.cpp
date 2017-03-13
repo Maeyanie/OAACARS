@@ -136,7 +136,7 @@ void MainWindow::checkFuel(float fuel) {
         if (window[x] > max) max = window[x];
     }
 
-    if (fuel > max && state > PREFLIGHT && (fuel - max) > 1.0) refuel(max, fuel);
+    if (fuel > max && state > PREFLIGHT && (fuel - max) > (max / 100.0)) refuel(max, fuel);
 
     window[pos++] = fuel;
     if (pos >= 20) pos = 0;
