@@ -25,7 +25,7 @@ struct Status {
     float pitch, bank, heading, vs, ias, gs, lat, lon, asl, agl, g;
     float flaps, zfw, fuel, distance, completed, remaining;
     char engine[8];
-    bool gear;
+    bool gear, onRwy;
     bool bea, nav, ldn, str, txi;
     float winddeg, windknots, oat;
 };
@@ -87,6 +87,7 @@ private:
     void taxiSpeed(float speed);
     void qnhTakeoff();
     void qnhLanding();
+    void crashed(QString reason);
 
     Ui::MainWindow *ui;
     QLabel *sRealTime, *sFlightTime;
