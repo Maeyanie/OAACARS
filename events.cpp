@@ -176,7 +176,7 @@ void MainWindow::beaconOff() {
 
 void MainWindow::iasBelow10k() {
     static qint64 last = 0;
-    if (last < time(NULL) - 10) newEvent("IAS ABOVE 250 KNOTS BELOW 10000 ft", true);
+    if (last < time(NULL) - 10) newEvent(QString("IAS ABOVE 250 KNOTS BELOW 10000 ft (%1 kt at %2 ft)").arg(cur.ias).arg(cur.asl), true);
     last = time(NULL);
 
     mistakes.iasLow = true;
