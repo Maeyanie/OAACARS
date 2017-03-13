@@ -182,7 +182,7 @@ void MainWindow::iasBelow10k() {
     mistakes.iasLow = true;
 }
 
-void MainWindow::lightsBelow10k() { // Not yet called anywhere
+void MainWindow::lightsBelow10k() {
     static qint64 last = 0;
     if (last < time(NULL) - 10) newEvent("LIGHTS OFF BELOW 10000 ft", true);
     last = time(NULL);
@@ -190,7 +190,7 @@ void MainWindow::lightsBelow10k() { // Not yet called anywhere
     mistakes.lightsLow = true;
 }
 
-void MainWindow::lightsAbove10k() { // Not yet called anywhere
+void MainWindow::lightsAbove10k() {
     static qint64 last = 0;
     if (last < time(NULL) - 10) newEvent("LIGHTS ON ABOVE 10000 ft", true);
     last = time(NULL);

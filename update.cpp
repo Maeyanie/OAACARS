@@ -108,7 +108,8 @@ void MainWindow::gotUpdate() {
                         newEvent("Fallback landing triggered.", true);
                         landing();
                     }
-
+                    if (cur.asl < 10000.0 && !cur.ldn) lightsBelow10k();
+                    else if (state == CRUISE && cur.asl > 10000.0 && cur.ldn) lightsAbove10k();
                     break;
 
                 case 21: //        x     y     z     vX    vY    vZ   dstft dstnm
