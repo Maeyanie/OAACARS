@@ -108,7 +108,7 @@ void MainWindow::gotUpdate() {
                         newEvent("Fallback landing triggered.", true);
                         landing();
                     }
-                    if (cur.asl < 10000.0 && !cur.ldn) lightsBelow10k();
+                    if (state >= CLIMB && state <= DESCEND && cur.asl < 10000.0 && !cur.ldn) lightsBelow10k();
                     else if (state == CRUISE && cur.asl > 10000.0 && cur.ldn) lightsAbove10k();
                     break;
 
