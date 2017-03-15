@@ -300,14 +300,14 @@ void MainWindow::uiUpdate() {
     }
 
 
-    ui->ias->setText(QString::number(cur.ias, 'f', 1)+" kn");
-    ui->gs->setText(QString::number(cur.gs, 'f', 1)+" kn");
+    ui->ias->setText(QString::number(cur.ias, 'f', 1)+" kt");
+    ui->gs->setText(QString::number(cur.gs, 'f', 1)+" kt");
     ui->vs->setText(QString::number(cur.vs, 'f', 1)+" fpm");
 
     ui->flaps->setText(QString::number(cur.flaps, 'f', 0)+"%");
 
-    ui->lat->setText(QString::number(cur.lat, 'f', 2)+" deg");
-    ui->lon->setText(QString::number(cur.lon, 'f', 2)+" deg");
+    ui->lat->setText(QString::number(cur.lat, 'f', 2)+"°");
+    ui->lon->setText(QString::number(cur.lon, 'f', 2)+"°");
     ui->altitude->setText(QString::number(cur.agl, 'f', 0)+" ft");
 
     ui->fob->setText(QString::number(cur.fuel, 'f', 0)+" lb");
