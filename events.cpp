@@ -80,18 +80,18 @@ void MainWindow::landing() {
 
     ui->fsDepIcao->setText(ui->depIcao->text());
     ui->fsArrIcao->setText(ui->arrIcao->text());
-    ui->fsDistance->setText(QString::number(onLanding.distance-onTakeoff.distance, 'f', 1));
-    ui->fsZFW->setText(ui->zfw->text());
+    ui->fsDistance->setText(QString::number(onLanding.distance-onTakeoff.distance, 'f', 1)+" nmi");
+    ui->fsZFW->setText(ui->zfw->text()+" lb");
     ui->fsCritEvents->setText(QString::number(critEvents));
-    ui->fsDuration->setText(QString::number((onLanding.time-onTakeoff.time)/3600.0, 'f', 2));
-    ui->fsBFuel->setText(QString::number(startFuel-onLanding.fuel, 'f', 0));
-    ui->fsFFuel->setText(QString::number(onTakeoff.fuel-onLanding.fuel, 'f', 0));
-    ui->fsVS->setText(QString::number(onLanding.vs, 'f', 0));
-    ui->fsG->setText(QString::number(maxG, 'f', 1));
-    ui->fsPitch->setText(QString::number(onLanding.pitch, 'f', 0));
-    ui->fsIAS->setText(QString::number(onLanding.ias, 'f', 1));
-    ui->fsBank->setText(QString::number(onLanding.bank, 'f', 1));
-    ui->fsFlaps->setText(QString::number(onLanding.flaps, 'f', 0));
+    ui->fsDuration->setText(QString::number((onLanding.time-onTakeoff.time)/3600.0, 'f', 2)+" h");
+    ui->fsBFuel->setText(QString::number(startFuel-onLanding.fuel, 'f', 0)+" lb");
+    ui->fsFFuel->setText(QString::number(onTakeoff.fuel-onLanding.fuel, 'f', 0)+" lb");
+    ui->fsVS->setText(QString::number(onLanding.vs, 'f', 0)+" fpm");
+    ui->fsG->setText(QString::number(maxG, 'f', 1)+" G");
+    ui->fsPitch->setText(QString::number(onLanding.pitch, 'f', 0)+"°");
+    ui->fsIAS->setText(QString::number(onLanding.ias, 'f', 1)+" kt");
+    ui->fsBank->setText(QString::number(onLanding.bank, 'f', 1)+"°");
+    ui->fsFlaps->setText(QString::number(onLanding.flaps, 'f', 0)+"%");
 
     ui->tabWidget->setCurrentWidget(ui->summaryTab);
     ui->endButton->setEnabled(true);
