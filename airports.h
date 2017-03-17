@@ -17,7 +17,7 @@ signals:
 public slots:
 
 private:
-    QMap<QString,QPair<double,double>> airports;
+    QMap<QString, QPair<double,double> > airports;
 };
 
 #endif // AIRPORTS_H
