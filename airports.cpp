@@ -77,7 +77,7 @@ Airports::Airports(QObject *parent) : QObject(parent)
 }
 
 QPair<double,double>* Airports::get(QString icao) {
-    auto i = airports.find(icao);
+    QMap<QString, QPair<double,double> >::iterator i = airports.find(icao);
     if (i == airports.end()) return NULL;
     return &*i;
 }
