@@ -119,8 +119,9 @@ void MainWindow::on_connectButton_clicked()
 void MainWindow::on_startButton_clicked()
 {
     qint64 tNow = time(NULL);
+    qint32 ret;
     if (cur.time < tNow - 5 || cur.rref < tNow - 5) {
-        qint32 ret = QMessageBox::warning(this, "X-Plane Not Connected",
+        ret = QMessageBox::warning(this, "X-Plane Not Connected",
                                           QString("I don't seem to be getting all the needed data from X-Plane.\nThis flight may not work properly.\n"
                                                   "Continue anyhow?"),
                                           QMessageBox::Yes, QMessageBox::No);
@@ -128,7 +129,7 @@ void MainWindow::on_startButton_clicked()
     }
 
     if (cur.agl > 20.0) {
-        qint32 ret = QMessageBox::warning(this, "High Ground AGL",
+        ret = QMessageBox::warning(this, "High Ground AGL",
                                           QString("Your AGL altitude of %1 seems a little too high.\nAre you sure you're on the ground?").arg(cur.agl),
                                           QMessageBox::Yes, QMessageBox::No);
         if (ret == QMessageBox::No) return;
@@ -138,9 +139,11 @@ void MainWindow::on_startButton_clicked()
     ui->depIcao->setText(ui->depIcao->text().toUpper());
     QPair<double,double>* point = airports.get(ui->depIcao->text());
     if (!point) {
-        QMessageBox::critical(this, "Airport Not Found",
-                              QString("Could not find the departure airport '%1' in the database.").arg(ui->depIcao->text()),
-                              QMessageBox::Ok);
+        ret = QMessageBox::critical(this, "Airport Not Found",
+                              QString("Could not find the departure airport '%1' in the database.\n"
+                                      "Would you like to re-download the airports list?").arg(ui->depIcao->text()),
+                              QMessageBox::Yes, QMessageBox::No);
+        if (ret == QMessageBox::Yes) airports.refresh();
         return;
     }
     dep = *point;
@@ -148,16 +151,18 @@ void MainWindow::on_startButton_clicked()
     ui->arrIcao->setText(ui->arrIcao->text().toUpper());
     point = airports.get(ui->arrIcao->text());
     if (!point) {
-        QMessageBox::critical(this, "Airport Not Found",
-                              QString("Could not find the destination airport '%1' in the database.").arg(ui->arrIcao->text()),
-                              QMessageBox::Ok);
+        ret = QMessageBox::critical(this, "Airport Not Found",
+                              QString("Could not find the destination airport '%1' in the database.\n"
+                                      "Would you like to re-download the airports list?").arg(ui->arrIcao->text()),
+                              QMessageBox::Yes, QMessageBox::No);
+        if (ret == QMessageBox::Yes) airports.refresh();
         return;
     }
     arr = *point;
 
     double depDist = greatcircle(cur.lat, cur.lon, dep);
     if (depDist > 10.0) {
-        qint32 ret = QMessageBox::warning(this, "Not At Departure Airport",
+        ret = QMessageBox::warning(this, "Not At Departure Airport",
                                           QString("Your distance of %1 nmi from the departure airport %2 seems a little too high.\n"
                                                   "Are you sure you're at the right place?").arg(depDist).arg(ui->depIcao->text()),
                                           QMessageBox::Yes, QMessageBox::No);

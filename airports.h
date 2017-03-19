@@ -11,6 +11,7 @@ class Airports : public QObject
 public:
     explicit Airports(QObject *parent = 0);
     QPair<double, double> *get(QString icao);
+    void refresh();
 
 signals:
 
