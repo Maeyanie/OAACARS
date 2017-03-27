@@ -18,19 +18,35 @@ SOURCES += main.cpp\
     va.cpp \
     events.cpp \
     update.cpp \
-    airports.cpp
+    airports.cpp \
+    ipdialog.cpp
 
 HEADERS  += mainwindow.h \
     va.h \
-    airports.h
+    airports.h \
+    ipdialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    ipdialog.ui
 
 DISTFILES += \
     airports.sh \
     airports.csv \
-    LICENSE.md
+    LICENSE.md \
+    android/AndroidManifest.xml \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradlew \
+    android/res/values/libs.xml \
+    android/build.gradle \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew.bat
 
-LIBS += -L$$PWD -lcurl
+PLATFORM = $$QMAKESPEC
+PLATFORM ~= s|.+/|
+PLATFORM ~= s|.+\\|
 
+LIBS += -L$$PWD/$$PLATFORM -L$$PWD -lcurl
 win32:LIBS += -lz -lws2_32
+
+ANDROID_EXTRA_LIBS = $$PWD/android-g++/libcurl.so
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

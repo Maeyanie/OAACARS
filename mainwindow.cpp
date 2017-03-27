@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "ipdialog.h"
 
 #include <QMessageBox>
 #include <QTimer>
@@ -23,6 +24,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->callsign->setText(settings.value("callsign").toString());
     ui->password->setText(settings.value("password").toString());
     ui->applyWeight->setChecked(settings.value("applyWeight", true).toBool());
+
+    myip = strdup(settings.value("myip", "127.0.0.1").toByteArray().data());
+    remoteip = strdup(settings.value("remoteip", "127.0.0.1").toByteArray().data());
+    qInfo() << "myip=" << myip << ", remoteip=" << remoteip;
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(sendUpdate()));
     connect(&uiTimer, SIGNAL(timeout()), this, SLOT(uiUpdate()));
@@ -328,9 +333,22 @@ void MainWindow::on_applyWeight_stateChanged(int arg1)
     settings.setValue("applyWeight", arg1);
 }
 
-void MainWindow::on_conSim_clicked()
+static QTime conSimPressStart;
+void MainWindow::on_conSim_pressed()
 {
-    QHostAddress addr("127.0.0.1");
+    conSimPressStart = QTime::currentTime();
+}
+void MainWindow::on_conSim_released()
+{
+    if (fabs(QTime::currentTime().msecsTo(conSimPressStart)) > 2000) {
+        IPDialog* ipd = new IPDialog(this);
+        ipd->show();
+    } else {
+        connectToSim();
+    }
+}
+
+void MainWindow::connectToSim() {
     char buffer[1024];
     char* pos = buffer;
     memcat(&pos, "DSEL", 5);
@@ -351,16 +369,21 @@ void MainWindow::on_conSim_clicked()
     memcat(&pos, 106); // switches 1: electrical
     memcat(&pos, 114); // annunciators: general #2
     memcat(&pos, 127); // warning status
-    sock->writeDatagram(buffer, (pos-buffer), addr, 49000);
+    sock->writeDatagram(buffer, (pos-buffer), remoteip, 49000);
 
+    char addr[16];
+    memset(addr, 0, 16);
+    strncpy(addr, myip.toString().toUtf8().data(), 16);
     memset(buffer, 0, 1024);
     pos = buffer;
     memcat(&pos, "ISET", 5);
     memcat(&pos, 64);
-    memcat(&pos, "127.0.0.1", 10); pos += 6;
+    memcat(&pos, addr, 16);
     memcat(&pos, "32123", 6); pos += 2;
     memcat(&pos, 1);
-    sock->writeDatagram(buffer, (pos-buffer), addr, 49000);
+    sock->writeDatagram(buffer, (pos-buffer), remoteip, 49000);
 
     sendDRef(sock, "sim/flightmodel/forces/fnrml_gear", 1);
 }
+
+

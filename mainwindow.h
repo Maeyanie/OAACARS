@@ -39,9 +39,12 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    QHostAddress myip, remoteip;
+
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void updateDone();
+    void connectToSim();
 
 private slots:
     void gotUpdate();
@@ -51,14 +54,15 @@ private slots:
     void on_connectButton_clicked();
     void on_startButton_clicked();
     void on_endButton_clicked();
-    void on_conSim_clicked();
 
     void on_callsign_textChanged(const QString &arg1);
     void on_password_textChanged(const QString &arg1);
     void on_applyWeight_stateChanged(int arg1);
 
+    void on_conSim_pressed();
+    void on_conSim_released();
+
 private:
-    void connectToSim();
     void newEvent(QString desc, bool critical = 0);
     void taxi();
     void takeoff();
