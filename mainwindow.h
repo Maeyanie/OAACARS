@@ -25,7 +25,8 @@ struct Status {
     float pitch, bank, heading, vs, ias, gs, lat, lon, asl, agl, g;
     float flaps, zfw, fuel, distance, completed, remaining;
     char engine[8];
-    bool gear, onRwy;
+    bool enginesRunning;
+    bool gear, onRwy, onRwyPrev;
     bool bea, nav, ldn, str, txi;
     float qnhReal, qnhSet, winddeg, windknots, oat;
 };
@@ -61,6 +62,8 @@ private slots:
 
     void on_conSim_pressed();
     void on_conSim_released();
+
+    void on_loadJsonButton_clicked();
 
 private:
     void newEvent(QString desc, bool critical = 0);

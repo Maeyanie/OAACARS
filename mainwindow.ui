@@ -810,9 +810,9 @@
       <widget class="QCheckBox" name="applyWeight">
        <property name="geometry">
         <rect>
-         <x>520</x>
+         <x>570</x>
          <y>20</y>
-         <width>141</width>
+         <width>91</width>
          <height>17</height>
         </rect>
        </property>
@@ -832,7 +832,7 @@
        </property>
        <property name="geometry">
         <rect>
-         <x>390</x>
+         <x>440</x>
          <y>50</y>
          <width>111</width>
          <height>31</height>
@@ -845,7 +845,7 @@
       <widget class="QLineEdit" name="callsign">
        <property name="geometry">
         <rect>
-         <x>86</x>
+         <x>60</x>
          <y>20</y>
          <width>131</width>
          <height>20</height>
@@ -855,7 +855,7 @@
       <widget class="QLineEdit" name="password">
        <property name="geometry">
         <rect>
-         <x>86</x>
+         <x>60</x>
          <y>50</y>
          <width>131</width>
          <height>20</height>
@@ -865,7 +865,7 @@
       <widget class="QPushButton" name="connectButton">
        <property name="geometry">
         <rect>
-         <x>250</x>
+         <x>200</x>
          <y>10</y>
          <width>111</width>
          <height>31</height>
@@ -881,7 +881,7 @@
       <widget class="QPushButton" name="conSim">
        <property name="geometry">
         <rect>
-         <x>250</x>
+         <x>200</x>
          <y>50</y>
          <width>111</width>
          <height>31</height>
@@ -897,9 +897,9 @@
       <widget class="QLabel" name="label_16">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>4</x>
          <y>50</y>
-         <width>71</width>
+         <width>51</width>
          <height>20</height>
         </rect>
        </property>
@@ -916,7 +916,7 @@
        </property>
        <property name="geometry">
         <rect>
-         <x>390</x>
+         <x>440</x>
          <y>10</y>
          <width>111</width>
          <height>31</height>
@@ -929,9 +929,9 @@
       <widget class="QLabel" name="label_15">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>4</x>
          <y>20</y>
-         <width>71</width>
+         <width>51</width>
          <height>20</height>
         </rect>
        </property>
@@ -940,6 +940,19 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="loadJsonButton">
+       <property name="geometry">
+        <rect>
+         <x>320</x>
+         <y>30</y>
+         <width>111</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Load JSON Flightplan</string>
        </property>
       </widget>
      </widget>

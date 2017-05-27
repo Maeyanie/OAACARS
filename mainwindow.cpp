@@ -3,6 +3,7 @@
 #include "ipdialog.h"
 
 #include <QMessageBox>
+#include <QFileDialog>
 #include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -119,6 +120,73 @@ void MainWindow::on_connectButton_clicked()
     ui->statusBar->showMessage("Connected.");
     ui->startButton->setEnabled(true);
     ui->endButton->setEnabled(false);
+}
+
+void MainWindow::on_loadJsonButton_clicked()
+{
+    QSettings settings("OAAE", "OAACARS", this);
+
+    //get the saved filename and check if file still exists
+    QString fpFile=settings.value("lastJsonFpFile").toString();
+    QFileInfo check_file(fpFile);
+    if (!check_file.exists() || !check_file.isFile())
+            fpFile="";
+    //reload saved file?
+    if(fpFile!="")
+    {
+        int yn = QMessageBox::question(this, "Flight Plan", "Reload last used JSON Flightplan?\n"+fpFile, QMessageBox::Yes, QMessageBox::No);
+        if (yn == QMessageBox::No)
+            fpFile="";
+    }
+    //Still no valid file? Pick one now ...
+    if(fpFile=="")
+    {
+        fpFile = QFileDialog::getOpenFileName(this,
+            tr("Open JSON Flightplan"), "", tr("JSON Files (*.json)"));
+    }
+
+    //if we have a filename, remember filename and try to load file
+    if(fpFile!="")
+    {
+        settings.setValue("lastJsonFpFile", fpFile);
+
+        //load JSON data ...
+        QFile file(fpFile);
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        QByteArray jsonData = file.readAll();
+        file.close();
+
+        QJsonDocument document = QJsonDocument::fromJson(jsonData);
+        QJsonObject json = document.object();
+
+        //QJsonValue value = json.value("LEG");
+        //QJsonArray array = value.toArray();
+        //foreach (const QJsonValue & v, array)
+        //    qDebug() << v.toObject().value("NAME").toString();
+
+        //apply data, if valid
+        if(json["Data Format Version"].toString()=="V1.0")
+        {
+            ui->depIcao->setText(json["DEP"].toString());
+            ui->arrIcao->setText(json["ARR"].toString());
+            ui->alt1->setText(json["ARR"].toString());
+            ui->route->setPlainText(json["RTE"].toString());
+            ui->flightNo->setText(json["FLT"].toString());
+            ui->cruiseAlt->setText("FL"+json["CRZ"].toString());
+            ui->acIcao->setText(json["A/C"].toString());
+
+            ui->remarks->setPlainText("Data created by route2plane "+json["route2plane Version"].toString()+" on "+json["DATE"].toString()+" "+json["TIME"].toString());
+            ui->depTime->setText(QTime::currentTime().toString("hh:mm"));
+
+            ui->eet->setText("");
+            ui->tailNumber->setText("");
+            ui->pax->setText("");
+            ui->cargo->setText("");
+
+            //maybe later ... has to be changed also when data are loaded "on connect" and also if data are entered manually
+            //setWindowTitle("OAACARS ["+json["DEP"].toString()+">"+json["ARR"].toString()+"]");
+        }
+    }
 }
 
 void MainWindow::on_startButton_clicked()
@@ -385,5 +453,4 @@ void MainWindow::connectToSim() {
 
     sendDRef(sock, "sim/flightmodel/forces/fnrml_gear", 1);
 }
-
 

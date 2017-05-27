@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QMessageBox>
 
 void MainWindow::gotUpdate() {
     static float prevOverspeed = 0.0, prevStall = 0.0;
@@ -45,7 +46,7 @@ void MainWindow::gotUpdate() {
 
                     if (state <= PREFLIGHT && cur.gs > 2.0) taxi();
                     if ((state == TAXITORWY || state == TAXITOGATE) && cur.gs > 25.0 && !cur.onRwy) taxiSpeed(cur.gs);
-                    if (cur.ias > 250.0 && cur.asl < 10000.0) iasBelow10k();
+                    if (cur.ias > 260.0 && cur.asl < 10000.0) iasBelow10k();
                     break;
 
                 case 4: //         mach  ----- fpm   ----- Gnorm Gaxil Gside -----
@@ -102,7 +103,26 @@ void MainWindow::gotUpdate() {
                     cur.lon = val[1];
                     cur.asl = val[2];
                     cur.agl = val[3];
+
+                    cur.onRwyPrev=cur.onRwy; //change detection for warning message to start the live flight now
                     cur.onRwy = (val[4] != 0.0);
+                    if(cur.onRwy==true && cur.onRwyPrev!=cur.onRwy)
+                    {
+                        QString dbgTxt="runwy="+QString::number(val[4])+"\n"+
+                                       "enginesRunning="+QString::number(cur.enginesRunning)+"\n"+
+                                       "state="+QString::number(state);
+                        //QMessageBox::critical(this, "Flight Tracking Debug", dbgTxt, QMessageBox::Ok);
+
+                        if(cur.enginesRunning==true && state <= PREFLIGHT)
+                        {
+                            QMessageBox::critical(this, "Flight Tracking", "\nYou are entering the runway...\n\nYou should start the flight tracking now!\n", QMessageBox::Ok);
+
+                            setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+                            raise();  // for MacOS
+                            activateWindow(); // for Windows
+                        }
+                    }
+
                     if ((state < CLIMB || state > DESCEND) && val[3] > (groundAGL + 10.0)) takeoff();
                     if (state >= CLIMB && state <= DESCEND && val[3] < groundAGL + 5 && cur.gs < 25) {
                         newEvent("Fallback landing triggered.", true);
@@ -120,6 +140,9 @@ void MainWindow::gotUpdate() {
                     break;
 
                 case 45: // FF
+                    for (int x = 0; x < 8; x++)
+                        cur.enginesRunning|=(val[x] != 0.0);
+
                     if (state >= PREFLIGHT) {
                         for (int x = 0; x < 8; x++) {
                             if ((val[x] > 0.0) && !cur.engine[x]) engineStart(x);
