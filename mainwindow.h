@@ -62,6 +62,8 @@ private slots:
     void on_conSim_pressed();
     void on_conSim_released();
 
+    void on_loadJsonButton_clicked();
+
 private:
     void newEvent(QString desc, bool critical = 0);
     void taxi();

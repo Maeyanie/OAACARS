@@ -1,5 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QMessageBox>
+
+bool enginesRunning=false, enginesRunningMkr=false;
 
 void MainWindow::gotUpdate() {
     static float prevOverspeed = 0.0, prevStall = 0.0;
@@ -45,7 +48,7 @@ void MainWindow::gotUpdate() {
 
                     if (state <= PREFLIGHT && cur.gs > 2.0) taxi();
                     if ((state == TAXITORWY || state == TAXITOGATE) && cur.gs > 25.0 && !cur.onRwy) taxiSpeed(cur.gs);
-                    if (cur.ias > 250.0 && cur.asl < 10000.0) iasBelow10k();
+                    if (cur.ias > 260.0 && cur.asl < 10000.0) iasBelow10k();
                     break;
 
                 case 4: //         mach  ----- fpm   ----- Gnorm Gaxil Gside -----
@@ -120,6 +123,25 @@ void MainWindow::gotUpdate() {
                     break;
 
                 case 45: // FF
+                    for (int x = 0; x < 8; x++)
+                        enginesRunning|=(val[x] != 0.0);
+
+                    if(enginesRunning==true && enginesRunningMkr==false)
+                    {
+                        if(enginesRunning==true && state <= PREFLIGHT)
+                        {
+                            QMessageBox::critical(this, "Flight Tracking", "\nStarting up the engines already ... ?\n\nYou should also start the flight tracking now!\n", QMessageBox::Ok);
+
+                            setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+                            raise();  // for MacOS
+                            activateWindow(); // for Windows
+
+                            enginesRunningMkr=true;
+                        }
+                    }
+                    if(enginesRunning==false || state > PREFLIGHT) //reset marker asap again
+                        enginesRunningMkr=false;
+
                     if (state >= PREFLIGHT) {
                         for (int x = 0; x < 8; x++) {
                             if ((val[x] > 0.0) && !cur.engine[x]) engineStart(x);
