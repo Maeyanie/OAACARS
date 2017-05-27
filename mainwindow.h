@@ -25,8 +25,7 @@ struct Status {
     float pitch, bank, heading, vs, ias, gs, lat, lon, asl, agl, g;
     float flaps, zfw, fuel, distance, completed, remaining;
     char engine[8];
-    bool enginesRunning;
-    bool gear, onRwy, onRwyPrev;
+    bool gear, onRwy;
     bool bea, nav, ldn, str, txi;
     float qnhReal, qnhSet, winddeg, windknots, oat;
 };

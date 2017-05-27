@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 
+bool enginesRunning=false, enginesRunningMkr=false;
+
 void MainWindow::gotUpdate() {
     static float prevOverspeed = 0.0, prevStall = 0.0;
     static bool isPaused = false;
@@ -103,26 +105,7 @@ void MainWindow::gotUpdate() {
                     cur.lon = val[1];
                     cur.asl = val[2];
                     cur.agl = val[3];
-
-                    cur.onRwyPrev=cur.onRwy; //change detection for warning message to start the live flight now
                     cur.onRwy = (val[4] != 0.0);
-                    if(cur.onRwy==true && cur.onRwyPrev!=cur.onRwy)
-                    {
-                        QString dbgTxt="runwy="+QString::number(val[4])+"\n"+
-                                       "enginesRunning="+QString::number(cur.enginesRunning)+"\n"+
-                                       "state="+QString::number(state);
-                        //QMessageBox::critical(this, "Flight Tracking Debug", dbgTxt, QMessageBox::Ok);
-
-                        if(cur.enginesRunning==true && state <= PREFLIGHT)
-                        {
-                            QMessageBox::critical(this, "Flight Tracking", "\nYou are entering the runway...\n\nYou should start the flight tracking now!\n", QMessageBox::Ok);
-
-                            setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
-                            raise();  // for MacOS
-                            activateWindow(); // for Windows
-                        }
-                    }
-
                     if ((state < CLIMB || state > DESCEND) && val[3] > (groundAGL + 10.0)) takeoff();
                     if (state >= CLIMB && state <= DESCEND && val[3] < groundAGL + 5 && cur.gs < 25) {
                         newEvent("Fallback landing triggered.", true);
@@ -141,7 +124,23 @@ void MainWindow::gotUpdate() {
 
                 case 45: // FF
                     for (int x = 0; x < 8; x++)
-                        cur.enginesRunning|=(val[x] != 0.0);
+                        enginesRunning|=(val[x] != 0.0);
+
+                    if(enginesRunning==true && enginesRunningMkr==false)
+                    {
+                        if(enginesRunning==true && state <= PREFLIGHT)
+                        {
+                            QMessageBox::critical(this, "Flight Tracking", "\nStarting up the engines already ... ?\n\nYou should also start the flight tracking now!\n", QMessageBox::Ok);
+
+                            setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+                            raise();  // for MacOS
+                            activateWindow(); // for Windows
+
+                            enginesRunningMkr=true;
+                        }
+                    }
+                    if(enginesRunning==false || state > PREFLIGHT) //reset marker asap again
+                        enginesRunningMkr=false;
 
                     if (state >= PREFLIGHT) {
                         for (int x = 0; x < 8; x++) {
