@@ -45,6 +45,7 @@ public:
     ~MainWindow();
     void updateDone();
     void connectToSim();
+    void remindOf(QString reason);
 
 private slots:
     void gotUpdate();

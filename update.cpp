@@ -124,30 +124,27 @@ void MainWindow::gotUpdate() {
 
                 case 45: // FF
                     for (int x = 0; x < 8; x++)
-                        enginesRunning|=(val[x] != 0.0);
-
-                    if(enginesRunning==true && enginesRunningMkr==false)
                     {
-                        if(enginesRunning==true && state <= PREFLIGHT)
+                        //update state for change detection
+                        enginesRunning|=(val[x] != 0.0);
+                        //update cur.engine values for inFlight events, if out of preflight
+                        if (state >= PREFLIGHT)
                         {
-                            QMessageBox::critical(this, "Flight Tracking", "\nStarting up the engines already ... ?\n\nYou should also start the flight tracking now!\n", QMessageBox::Ok);
-
-                            setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
-                            raise();  // for MacOS
-                            activateWindow(); // for Windows
-
-                            enginesRunningMkr=true;
-                        }
-                    }
-                    if(enginesRunning==false || state > PREFLIGHT) //reset marker asap again
-                        enginesRunningMkr=false;
-
-                    if (state >= PREFLIGHT) {
-                        for (int x = 0; x < 8; x++) {
                             if ((val[x] > 0.0) && !cur.engine[x]) engineStart(x);
                             else if ((val[x] == 0.0) && cur.engine[x]) engineStop(x);
                         }
                     }
+
+                    //evaluation of change detection for "flight not started" reminder
+                    if(enginesRunning==true && enginesRunningMkr==false)
+                    {
+                        if(state <= PREFLIGHT)
+                        {
+                            remindOf("Flight not started");
+                        }
+                    }
+                    enginesRunningMkr=enginesRunning;
+
                     break;
 
                 case 63: // payload weights and CG

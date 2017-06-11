@@ -6,6 +6,9 @@
 #include <QFileDialog>
 #include <QTimer>
 
+//#include <QtMultimedia/QMediaPlayer>
+//#include <QSound>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -62,6 +65,27 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::remindOf(QString reason)
+{
+    if(reason=="Flight not started")
+    {
+        //--- MessageBox
+        //QMessageBox::critical(this, "Flight Tracking", "\nStarting up the engines already ... ?\n\nYou should also start the flight tracking now!\n", QMessageBox::Ok);
+
+        //--- get window to the foreground
+        setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+        raise();  // for MacOS
+        activateWindow(); // for Windows
+
+        //--- play sound using MediaPlayer
+        //QMediaPlayer *player = new QMediaPlayer;
+        //player->setMedia(QUrl::fromLocalFile("sounds//57806__guitarguy1985__aircraftalarm.wav"));
+        //player->play();
+
+        //--- play sound using Qsound
+        //QSound::play("sounds/57806__guitarguy1985__aircraftalarm.wav");
+    }
+}
 
 
 void MainWindow::on_connectButton_clicked()
