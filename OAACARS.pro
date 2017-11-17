@@ -40,7 +40,9 @@ DISTFILES += \
     android/res/values/libs.xml \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
-    android/gradlew.bat
+    android/gradlew.bat \
+    x-plane/OAAE_Interface.lua \
+    x-plane/PI_oaacars-datarefs.py
 
 PLATFORM = $$QMAKESPEC
 PLATFORM ~= s|.+/|
