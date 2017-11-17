@@ -126,9 +126,20 @@ private:
     } mistakes;
 };
 
-void memcat(char** ptr, const char* data, int len);
-void memcat(char** ptr, const char* data);
-void memcat(char** ptr, const int data);
+inline void memcat(char** ptr, const char* data, int len) {
+	memcpy(*ptr, data, len);
+	(*ptr) += len;
+}
+inline void memcat(char** ptr, const char* data) {
+	memcpy(*ptr, data, strlen(data)+1);
+	(*ptr) += strlen(data)+1;
+}
+template<typename Type>
+inline void memcat(char** ptr, Type data) {
+	memcpy(*ptr, &data, sizeof(Type));
+	(*ptr) += sizeof(Type);
+}
+
 void sendDRef(QUdpSocket* sock, const char *name, qint32 id, qint32 freq = 20);
 void setDRef(QUdpSocket* sock, const char* name, float val);
 double greatcircle(QPair<double,double> src, QPair<double,double> tgt);
